@@ -1249,6 +1249,9 @@ class QuadStickPreferences(wx.Frame):
         self.voice_transcript.Bind(wx.EVT_KEY_DOWN, self.KeyDownEvent, self.voice_transcript)
         self.voice_transcript.Bind(wx.EVT_KEY_UP, self.KeyUpEvent, self.voice_transcript)
         self.Bind(wx.EVT_CHAR_HOOK, self.KeyDownEvent2, self)
+        self.Bind(wx.EVT_KEY_DOWN, self.KeyDownEvent2, self)
+        self.Bind(wx.EVT_KEY_UP, self.KeyDownEvent2, self)
+        self.Bind(wx.EVT_CHAR_HOOK, self.KeyDownEvent2, self.text_ctrl_messages)
         # set up drag and drop for user file list
         dropTarget = TextDropTarget(self.user_game_files_list, self.user_game_files_dropped)
         self.user_game_files_list.SetDropTarget(dropTarget)
@@ -1597,7 +1600,13 @@ class QuadStickPreferences(wx.Frame):
             self.text_ctrl_messages.AppendText("Loaded preferences OK\n")
             settings["preferences"] = preferences
             telemetry_log('loadprefs&' + urllib.parse.urlencode(preferences))
-
+            # send telemetry for QMP settings
+            scratch = settings.copy()
+            scratch.pop("preferences")
+            scratch.pop("games")
+            scratch.pop("voices")
+            scratch.pop("builds")
+            telemetry_log('settings&' + urllib.parse.urlencode(scratch))
         else: 
             # disable any tabs that need the quadstick
             self.text_ctrl_messages.AppendText("Using previously saved preference values\n")
@@ -2183,12 +2192,12 @@ class QuadStickPreferences(wx.Frame):
                 self.SetCursor(wx.Cursor(wx.CURSOR_DEFAULT))
 
                 #self.online_voice_files_list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        if page_index == 0 or page_index == 5: # games or voice page
-            if self._read_online_files_flag:
-                self._read_online_files_flag = False
-                if len(self._game_profiles) == 0:
-                    self.ScanGoogleGameProfilesEvent(event) # updates csv and vch files
-                #self.text_ctrl_messages.SetFocus()  # return the focus to the text pane
+        # if page_index == 0 or page_index == 5: # games or voice page
+            # if self._read_online_files_flag:
+                # self._read_online_files_flag = False
+                # if len(self._game_profiles) == 0:
+                    # self.ScanGoogleGameProfilesEvent(event) # updates csv and vch files
+                # #self.text_ctrl_messages.SetFocus()  # return the focus to the text pane
         settings['last_page'] = page_index
         event.Skip()
     def DownloadFirmwareEvent(self, event):  # wxGlade: QuadStickPreferences.<event_handler>
@@ -2298,7 +2307,7 @@ class QuadStickPreferences(wx.Frame):
                     
                     # reopen game controller interface
                     try:
-                        QS = QuadStickHID(self, self.CM)
+                        QS = QuadStickHID(self, self.VG)
                         QS.enable(settings.get('enable_CM', True))
                         updater = None
                         if CM: updater = CM.update
@@ -2419,7 +2428,7 @@ class QuadStickPreferences(wx.Frame):
         # grab any ESCAPE character and use it to Press PS4 Touchpad
         global PressTouchPad
         value = event.GetKeyCode()
-        #print 'KeyDownEvent ', repr(event)
+        print ('KeyDownEvent ', repr(event))
         # if value == 27: # escape
             # if cronusmax.PressTouchPad == 0:
                 # print("press touchpad")
@@ -2438,17 +2447,17 @@ class QuadStickPreferences(wx.Frame):
         # grab any ESCAPE character and use it to Press PS4 Touchpad
         # if voice transcript is not the focus, make it so
         global PressTouchPad
-        #print 'KeyDownEvent2 ', repr(event)
+        print ('KeyDownEvent2 ', repr(event))
         if self.FindFocus() != self.voice_transcript:
-            #print "voice_transcript does not have focus\n"
+            print ("voice_transcript does not have focus\n")
             value = event.GetKeyCode()
             if value == 27: # escape
                 self.voice_transcript.SetFocus()
-                if cronusmax.PressTouchPad == 0:
-                    print("press touchpad and change focus")
-                    cronusmax.PressTouchPad = 1
-                    self.CM.update(None)
-                    value = event.GetKeyCode()
+                # if cronusmax.PressTouchPad == 0:
+                    # print("press touchpad and change focus")
+                    # cronusmax.PressTouchPad = 1
+                    # self.CM.update(None)
+                    # value = event.GetKeyCode()
         value = event.GetKeyCode()
         if value == 349: #"F10"
             self.StartMouseCaptureEvent(event)

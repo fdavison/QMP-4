@@ -28,8 +28,11 @@ folder_row_div_tag = '<div class="folder-row">'
 factory_games_ids_list = "http://bvhbml89uymwxubx.quadstick.com" 
 
 version_url = "http://qmp2version.quadstick.com"
+#telemetery_url =  "https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec"
 
-VERSION = '4.00'
+#telemetery_url = "https://telemetry.quadstick.com"
+
+VERSION = '4.00.01'
 
 USERNAME = os.environ['USERNAME']
 IDHASH = str(uuid.getnode())
@@ -157,7 +160,8 @@ def _telemetry_log(log_string):
     try:
         #print "_telemetry_log: ", log_string
         #f = urllib2.urlopen("https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec?qmp=" + IDHASH + "&log=" + repr(log_string), None, 4.0) # append log entry
-        f = urllib.request.urlopen("https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec", bytes("qmp=" + IDHASH + "&log=" + repr(log_string), 'utf-8'), 10.0) # append log entry
+        #f = urllib.request.urlopen(telemetery_url, bytes("qmp=" + IDHASH + "&log=" + repr(log_string), 'utf-8'), 10.0) # append log entry
+        f = urllib.request.urlopen("https://telemetry.quadstick.com/exec?qmp=" + IDHASH + "&log=" + repr(log_string), None, 10.0) # append log entry
         #f = urllib2.urlopen("https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec", urllib.urlencode({"qmp":str(IDHASH),"log":repr(log_string)}), 4.0) # append log entry
         version = f.read()
         #print "telemetry log result: ", version

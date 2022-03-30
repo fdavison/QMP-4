@@ -5,6 +5,7 @@ import threading
 import copy
 from microterm import microterm
 from qsflash import preferences
+import traceback
 
 # Vocola Command Listener
 
@@ -156,6 +157,7 @@ class VocolaListenerThread(threading.Thread):
                 else:
                     print("received message:", data)
                 #self._mainWindow.Raise()
+                print ('VocolaListenerThread init: ', repr((self._mainWindow, self.sock, self.qs)))
                 if self.qs and int(preferences.get('enable_usb_comm', 0)):  # since quadstick active, send commands via USB
                     self.qs.sendline(copy.copy(data))
                     continue
@@ -169,8 +171,10 @@ class VocolaListenerThread(threading.Thread):
                 else:
                     self.term = None # if no serial port, force rescan for port on next command
                     self._mainWindow.CallAfter(self._messages.AppendText, "No serial connection to QuadStick found for commands.\n")
-        except:
+        except Exception as e:
             self._alive = False
+            print (repr(e))
+            print(traceback.format_exc())
             print ("vocola thread exception.  Stopping\n")
                 
     def kill(self):

@@ -8,6 +8,7 @@ import array
 import qsflash
 import queue
 import threading
+import ctypes
 
 '''
 Opens Virtual Game Emulator Bus DLL
@@ -164,6 +165,8 @@ class VirtualGamepadEmulator(object):
             self._log('opened virtual XBox gamepad\n')
         elif qsflash.settings.get('enable_VG4', False):
             self.gamepad = self.vg.VDS4Gamepad()
+            # if self.DS4_mode:
+                # self.gamepad.report = self.vg.win.vigem_commons.DS4_REPORT_EX()
             self.emulated_controller_type = 2
             print('opened VDS4Gamepad')
             self._log('opened virtual DS4 gamepad\n')
@@ -417,17 +420,22 @@ class VirtualGamepadEmulator(object):
         pass
 
     def update_DS4_with_DS4 (self, qs_data):
-        #print (repr(qs_data))
-        self.gamepad.report.bThumbLX  = qs_data[DS4_left_X]
-        self.gamepad.report.bThumbLY  = qs_data[DS4_left_Y]
-        self.gamepad.report.bThumbRX  = qs_data[DS4_right_X]
-        self.gamepad.report.bThumbRY  = qs_data[DS4_right_Y]
-        self.gamepad.report.bTriggerR = qs_data[DS4_press_R2]
-        self.gamepad.report.bTriggerL = qs_data[DS4_press_L2]
-        self.gamepad.report.wButtons  = (qs_data[DS4_BUTTONS] << 8) | qs_data[DS4_DPAD]
-        self.gamepad.report.bSpecial = qs_data[DS4_HOME]
+        print (repr(qs_data))
         
-        self.gamepad.update()
+        self.gamepad.report = self.vg.win.vigem_commons.DS4_REPORT_EX.from_buffer(bytearray(qs_data[1:] + [0,0,0,0,0,0,0,0,0]))
+        #self.gamepad.report.ReportBuffer = bytes(qs_data[1:])
+        self.gamepad.update_extended_report(self.gamepad.report)
+        
+        # self.gamepad.report.bThumbLX  = qs_data[DS4_left_X]
+        # self.gamepad.report.bThumbLY  = qs_data[DS4_left_Y]
+        # self.gamepad.report.bThumbRX  = qs_data[DS4_right_X]
+        # self.gamepad.report.bThumbRY  = qs_data[DS4_right_Y]
+        # self.gamepad.report.bTriggerR = qs_data[DS4_press_R2]
+        # self.gamepad.report.bTriggerL = qs_data[DS4_press_L2]
+        # self.gamepad.report.wButtons  = (qs_data[DS4_BUTTONS] << 8) | qs_data[DS4_DPAD]
+        # self.gamepad.report.bSpecial = qs_data[DS4_HOME]
+        
+        # self.gamepad.update()
         
     # def updateCells(self, report):  # update the values in the cells on the voice control page
         # try:

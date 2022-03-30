@@ -194,7 +194,7 @@ class QuadStickHID(object):
         tail = len(string) % 8
         if tail > 0:
             string = string + ("\0" * (8 - tail))
-        bytes = array.array("B", string)
+        bytes = array.array("B", string.encode())
         chunk = bytes[:8]
         while chunk:
             self.send_output_report(list(chunk))
