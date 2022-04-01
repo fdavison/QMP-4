@@ -128,6 +128,8 @@ class MouseCapture(wx.Dialog):
         self.SetSizer(sizer_32)
 
         self.Layout()
+
+        self.Bind(wx.EVT_INIT_DIALOG, self.__set_properties, self)
         # end wxGlade
         self.SetTransparent(100)
         self.Bind(wx.EVT_CHAR_HOOK, self.KeyDownEvent, self)
@@ -159,17 +161,6 @@ class MouseCapture(wx.Dialog):
         if self._mode == "Motion":
             #"""Hides the cursor."""
             self.SetCursor(wx.Cursor(wx.CURSOR_BLANK))
-
-
-    def __set_properties(self):
-        # Content of this block not found. Did you rename this class?
-        pass
-        # force window full screen with no borders
-        self.SetSize((wx.DisplaySize()[0], wx.DisplaySize()[1]))
-        self.SetWindowStyle(wx.STAY_ON_TOP) # go borderless
-        self.SetExtraStyle(self.GetExtraStyle() & ~(win32con.WS_EX_DLGMODALFRAME |
-           win32con.WS_EX_WINDOWEDGE | win32con.WS_EX_CLIENTEDGE | win32con.WS_EX_STATICEDGE))
-        self.SetRect((0,0,wx.DisplaySize()[0], wx.DisplaySize()[1]))
 
     def KeyDownEvent(self, event):
         # Look for the F10 character to exit capture mode
@@ -254,7 +245,15 @@ class MouseCapture(wx.Dialog):
         event.Skip()
 
 
+    def __set_properties(self, event):  # wxGlade: MouseCapture.<event_handler>
+        self.SetSize((wx.DisplaySize()[0], wx.DisplaySize()[1]))
+        self.SetWindowStyle(wx.STAY_ON_TOP) # go borderless
+        self.SetExtraStyle(self.GetExtraStyle() & ~(win32con.WS_EX_DLGMODALFRAME |
+           win32con.WS_EX_WINDOWEDGE | win32con.WS_EX_CLIENTEDGE | win32con.WS_EX_STATICEDGE))
+        self.SetRect((0,0,wx.DisplaySize()[0], wx.DisplaySize()[1]))
+        event.Skip()
 # end of class MouseCapture
+
 class TextDropTarget(wx.TextDropTarget):
    """ This object implements Drop Target functionality for Text """
    def __init__(self, obj, disposition=None):
@@ -1262,24 +1261,6 @@ class QuadStickPreferences(wx.Frame):
         self._last_game_list_selected = None # self.online_game_files_list
         # self.on_timer()
         
-    def __set_properties(self):
-        ib = wx.IconBundle()
-        ib.AddIconFromFile(resource_path("quadstickx.ico"), wx.BITMAP_TYPE_ANY)
-        self.SetIcons(ib)
-        # Content of this block not found. Did you rename this class?
-        pass
-        self.TIR_LeftUp.SetBarColor(wx.Colour(0,255,0))
-        self.TIR_LeftLeft.SetBarColor(wx.Colour(0,0,0))
-        self.TIR_LeftRight.SetBarColor(wx.Colour(0,255,0))
-        self.TIR_LeftDown.SetBarColor(wx.Colour(0,0,0))
-        self.TIR_RightUp.SetBarColor(wx.Colour(0,255,0))
-        self.TIR_RightLeft.SetBarColor(wx.Colour(0,0,0))
-        self.TIR_RightRight.SetBarColor(wx.Colour(0,255,0))
-        self.TIR_RightDown.SetBarColor(wx.Colour(0,0,0))
-        self.grid_1.SetDefaultCellFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, True))
-        self.grid_1.AutoSizeColumns(True)
-
-
     def on_timer(self):  # grabs the mouse location and relays it to the quadstick
         dx, dy = wx.GetDisplaySize()
         #print "display size: ", dx, dy
@@ -1598,20 +1579,24 @@ class QuadStickPreferences(wx.Frame):
         if load_preferences_file(self) is not None:  # try both flash and ssp access to prefs files
             # update status box
             self.text_ctrl_messages.AppendText("Loaded preferences OK\n")
-            settings["preferences"] = preferences
-            telemetry_log('loadprefs&' + urllib.parse.urlencode(preferences))
             # send telemetry for QMP settings
-            scratch = settings.copy()
-            scratch.pop("preferences")
-            scratch.pop("games")
-            scratch.pop("voices")
-            scratch.pop("builds")
-            telemetry_log('settings&' + urllib.parse.urlencode(scratch))
         else: 
             # disable any tabs that need the quadstick
             self.text_ctrl_messages.AppendText("Using previously saved preference values\n")
         if d is None:
             self.download_selected_build.Disable()
+
+        scratch = settings.copy()
+        telemetry_log('loadprefs&' + urllib.parse.urlencode(scratch.pop("preferences")))
+        scratch.pop("games")
+        ugp = scratch.pop("user_game_profiles")  # a list of user game profiles
+        ugp = {i:ugp[i] for i in range(0, len(ugp))}  # convert to simple dict
+        telemetry_log('user_game_profiles&' + urllib.parse.urlencode(ugp))
+        scratch.pop("voices")
+        scratch.pop("builds")
+        scratch['drive'] = d  
+        telemetry_log('settings&' + urllib.parse.urlencode(scratch))
+
         # make sure mouse capture settings have initial default values
         settings['mouse_capture_mode'] = settings.get('mouse_capture_mode', "Off").strip()
         display_width = wx.DisplaySize()[0]
@@ -2868,6 +2853,26 @@ class QuadStickPreferences(wx.Frame):
         else:
             self.text_ctrl_messages.AppendText("Restart program with QuadStick connected to activate Virtual gamepad emulator\r\n")
         event.Skip()
+        
+    def set_properties(self, dummy):
+        print ('SET PROPERTIES *******************************************************************************')
+        ib = wx.IconBundle()
+        ib.AddIcon(resource_path("quadstickx.ico"), wx.BITMAP_TYPE_ANY)
+        self.SetIcons(ib)
+        # # Content of this block not found. Did you rename this class?
+        # pass
+        # self.TIR_LeftUp.SetBarColor(wx.Colour(0,255,0))
+        # self.TIR_LeftLeft.SetBarColor(wx.Colour(0,0,0))
+        # self.TIR_LeftRight.SetBarColor(wx.Colour(0,255,0))
+        # self.TIR_LeftDown.SetBarColor(wx.Colour(0,0,0))
+        # self.TIR_RightUp.SetBarColor(wx.Colour(0,255,0))
+        # self.TIR_RightLeft.SetBarColor(wx.Colour(0,0,0))
+        # self.TIR_RightRight.SetBarColor(wx.Colour(0,255,0))
+        # self.TIR_RightDown.SetBarColor(wx.Colour(0,0,0))
+        # self.grid_1.SetDefaultCellFont(wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL, True))
+        # self.grid_1.AutoSizeColumns(True)
+
+
 # end of class QuadStickPreferences
 
 
@@ -2911,7 +2916,7 @@ def main():
     # load_preferences_file()
     
     gettext.install("app") # part of wxPython internationalization. replace with the appropriate catalog name for different languages
-    app = wx.PySimpleApp(0)
+    app = wx.App(0)
     wx.InitAllImageHandlers()
     QMP = QuadStickPreferences(None, wx.ID_ANY, "")
     QMP.console_type = ""
@@ -2999,6 +3004,7 @@ def main():
                 wx.CallAfter(QMP.csv_files_dropped, None, None, qmp_url)
 
             # restore the last active notebook tab
+            wx.CallAfter(QMP.set_properties, None)  # older wxpython would call __set_properties at start up.  Now we do it manually
             wx.CallAfter(QMP.notebook.SetSelection, settings.get('last_page', 0))
             wx.CallAfter(QMP.ScanGoogleGameProfilesEvent, None)  # since games list is tab 0, needed this to pre-load games
             wx.CallAfter(QMP.start_microterm)

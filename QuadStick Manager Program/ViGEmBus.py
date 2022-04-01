@@ -275,8 +275,8 @@ class VirtualGamepadEmulator(object):
         buttons |= XUSB_GAMEPAD_X if qs_data[QS_SQUARE] > 0 else 0
         buttons |= XUSB_GAMEPAD_Y if qs_data[QS_TRIANGLE] > 0 else 0
         
-        buttons |= XUSB_GAMEPAD_LEFT_SHOULDER  if qs_data[QS_L1] & 0x01 else 0
-        buttons |= XUSB_GAMEPAD_RIGHT_SHOULDER if qs_data[QS_R1] & 0x02 else 0
+        buttons |= XUSB_GAMEPAD_LEFT_SHOULDER  if qs_data[QS_L1] > 0 else 0
+        buttons |= XUSB_GAMEPAD_RIGHT_SHOULDER if qs_data[QS_R1] > 0 else 0
         buttons |= XUSB_GAMEPAD_LEFT_THUMB     if qs_data[QS_BUTTONS] & 0x04 else 0
         buttons |= XUSB_GAMEPAD_RIGHT_THUMB    if qs_data[QS_BUTTONS] & 0x08 else 0
         

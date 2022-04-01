@@ -32,22 +32,10 @@ version_url = "http://qmp2version.quadstick.com"
 
 #telemetery_url = "https://telemetry.quadstick.com"
 
-VERSION = '4.00.01'
+VERSION = '4.00.02'
 
-USERNAME = os.environ['USERNAME']
 IDHASH = str(uuid.getnode())
 print(VERSION, IDHASH)
-
-def hashit():
-    key = IDHASH
-    string = USERNAME
-    encoded_chars = []
-    for i in range(len(string)):
-        key_c = key[i % len(key)]
-        encoded_c = chr(ord(string[i]) + ord(key_c) % 256)
-        encoded_chars.append(encoded_c)
-    encoded_string = "".join(encoded_chars)
-    return base64.urlsafe_b64encode(encoded_string.encode()).decode()
 
 def get_google_drive_file_by_id(id):  # return the contents of a regular file (vhc,csv,png,etc) from its id
     download_file_by_id_url = "https://drive.google.com/uc?id=%s&authuser=0&export=download"
@@ -122,7 +110,7 @@ def _check_for_newer_version(mainWindow):
 
         print("latest version is: ", version)
         build = mainWindow.build_number_text.GetValue()
-        telemetry_log('start&version=' + VERSION + '&firmware=' + build + "&u=" + hashit())
+        telemetry_log('start&version=' + VERSION + '&firmware=' + build)
     except Exception as e:
         print("check_for_newer_version exception " + repr(e))
         print(traceback.format_exc())
@@ -159,10 +147,7 @@ def telemetry_log(log_string):
 def _telemetry_log(log_string):
     try:
         #print "_telemetry_log: ", log_string
-        #f = urllib2.urlopen("https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec?qmp=" + IDHASH + "&log=" + repr(log_string), None, 4.0) # append log entry
-        #f = urllib.request.urlopen(telemetery_url, bytes("qmp=" + IDHASH + "&log=" + repr(log_string), 'utf-8'), 10.0) # append log entry
         f = urllib.request.urlopen("https://telemetry.quadstick.com/exec?qmp=" + IDHASH + "&log=" + repr(log_string), None, 10.0) # append log entry
-        #f = urllib2.urlopen("https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec", urllib.urlencode({"qmp":str(IDHASH),"log":repr(log_string)}), 4.0) # append log entry
         version = f.read()
         #print "telemetry log result: ", version
     except Exception as e:
