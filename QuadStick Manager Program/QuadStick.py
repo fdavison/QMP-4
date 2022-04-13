@@ -46,6 +46,7 @@ import urllib.request, urllib.error, urllib.parse
 import socket
 import wx.lib.agw.pygauge as PG
 import wx.grid
+import wx.adv
 import subprocess
 import sys
 
@@ -84,6 +85,8 @@ SERIAL_PORT_SOCKET = None
 
 QMP = None
 
+MINIMIZE = False
+
 # begin wxGlade: dependencies
 import gettext
 import wx.grid
@@ -108,6 +111,84 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
     
 # Define Text Drop Target class
+
+def create_menu_item(menu, label, func):
+    item = wx.MenuItem(menu, -1, label)
+    menu.Bind(wx.EVT_MENU, func, id=item.GetId())
+    menu.Append(item)
+    return item
+
+
+class CustomTaskBarIcon(wx.adv.TaskBarIcon):
+    """"""
+    
+    #----------------------------------------------------------------------
+    def __init__(self, frame):
+        """Constructor"""
+        wx.adv.TaskBarIcon.__init__(self)
+        self.frame = frame
+        
+        # img = wx.Image("24x24.png", wx.BITMAP_TYPE_ANY)
+        # bmp = wx.BitmapFromImage(img)
+        # self.icon = wx.EmptyIcon()
+        # self.icon.CopyFromBitmap(bmp)
+        
+        # self.SetIcon(self.icon, "Restore")
+        ib = wx.IconBundle()
+        ib.AddIcon(resource_path("quadstickx.ico"), wx.BITMAP_TYPE_ANY)
+        i = ib.GetIcon(wx.Size(24,24))
+        self.SetIcon(i)
+        self.Bind(wx.adv.EVT_TASKBAR_LEFT_DOWN, self.OnTaskBarLeftClick)
+ 
+    #----------------------------------------------------------------------
+    def OnTaskBarActivate(self, evt):
+        """"""
+        pass
+ 
+    #----------------------------------------------------------------------
+    def OnTaskBarClose(self, evt):
+        """
+        Destroy the taskbar icon and frame from the taskbar icon itself
+        """
+        self.frame.Close()
+ 
+    #----------------------------------------------------------------------
+    def OnTaskBarLeftClick(self, evt):
+        """
+        Create the right-click menu
+        """
+        self.frame.Show()
+        self.frame.Restore()
+        
+    #----------------------------------------------------------------------
+    def CreatePopupMenu(self):
+        menu = wx.Menu()
+        create_menu_item(menu, 'Restore', self.OnTaskBarLeftClick)
+        create_menu_item(menu, 'Minimize', self.OnMinimize)
+        create_menu_item(menu, 'Maximize', self.OnMaximize)
+        menu.AppendSeparator()
+        create_menu_item(menu, 'Exit', self.on_exit)
+        return menu
+
+    #----------------------------------------------------------------------
+    def OnMaximize(self, evt):
+        """
+        Create the right-click menu
+        """
+        self.frame.Show()
+        self.frame.Maximize()
+        
+    #----------------------------------------------------------------------
+    def OnMinimize(self, evt):
+        """
+        Create the right-click menu
+        """
+        self.frame.Show()
+        self.frame.Iconize()
+        
+
+    def on_exit(self, event):
+        self.frame.Close()
 
 
 class MouseCapture(wx.Dialog):
@@ -874,6 +955,20 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox_enable_vg_DS4.SetToolTip(_("Enables the ViGEmBus DS4 virtual controller.  Allows playing PC games that use the DS4 controller, or Playstation Remote Play"))
         sizer_68.Add(self.checkbox_enable_vg_DS4, 0, 0, 0)
 
+        static_line_1 = wx.StaticLine(self.notebook_misc, wx.ID_ANY)
+        sizer_68.Add(static_line_1, 0, wx.EXPAND, 0)
+
+        sizer_1 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("QMP settings")), wx.VERTICAL)
+        sizer_17.Add(sizer_1, 1, wx.EXPAND, 0)
+
+        self.checkbox_minimize_to_tray = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Minimize to tray"))
+        self.checkbox_minimize_to_tray.SetToolTip(_("QMP will minimze to the task bar tray when checked"))
+        sizer_1.Add(self.checkbox_minimize_to_tray, 0, 0, 0)
+
+        self.checkbox_start_minimized = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Start QMP minimized"))
+        self.checkbox_start_minimized.SetToolTip(_("Start QMP minimized."))
+        sizer_1.Add(self.checkbox_start_minimized, 0, 0, 0)
+
         self.notebook_firmware = wx.Panel(self.notebook, wx.ID_ANY)
         self.notebook.AddPage(self.notebook_firmware, _("Firmware"))
 
@@ -1245,6 +1340,8 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ReloadFromQuadstick, self.button_reload)
         # end wxGlade
         self.Bind(wx.EVT_CLOSE, self.CloseEvent, self)
+        self.tbIcon = CustomTaskBarIcon(self)
+        self.Bind(wx.EVT_ICONIZE, self.onMinimize, self)
         self.voice_transcript.Bind(wx.EVT_KEY_DOWN, self.KeyDownEvent, self.voice_transcript)
         self.voice_transcript.Bind(wx.EVT_KEY_UP, self.KeyUpEvent, self.voice_transcript)
         self.Bind(wx.EVT_CHAR_HOOK, self.KeyDownEvent2, self)
@@ -1735,7 +1832,8 @@ class QuadStickPreferences(wx.Frame):
         # init virtual gamebus settings
         self.checkbox_enable_vg_DS4.SetValue(settings.get('enable_VG4', False))
         self.checkbox_enable_vg_X360.SetValue(settings.get('enable_VGX', False))
-
+        self.checkbox_minimize_to_tray.SetValue(settings.get('minimize_to_tray', False))
+        self.checkbox_start_minimized.SetValue(settings.get('start_mimimized', False))
         # init serial connection enable
         self.checkbox_enable_serial_port.SetValue(settings.get('enable_serial_port', True))      
 
@@ -2378,6 +2476,9 @@ class QuadStickPreferences(wx.Frame):
                 del settings['WINDOW_POSITION']
             except:
                 pass
+                
+        settings['minimize_to_tray'] = self.checkbox_minimize_to_tray.GetValue()
+        settings['start_mimimized'] = self.checkbox_start_minimized.GetValue()
         
         save_repr_file(settings)
         try:
@@ -2408,7 +2509,19 @@ class QuadStickPreferences(wx.Frame):
                 print('Serial port closed')
         except Exception as e:
             print("Exception during close event: ", repr(e))
+        try:
+            self.tbIcon.RemoveIcon()
+            self.tbIcon.Destroy()
+        except:
+            pass
         self.Destroy()
+    def onMinimize(self, event):
+        """
+        When minimizing, hide the frame so it "minimizes to tray"
+        """
+        if self.IsIconized():
+            if self.checkbox_minimize_to_tray.GetValue():
+                self.Hide()
     def KeyDownEvent(self, event):
         # grab any ESCAPE character and use it to Press PS4 Touchpad
         global PressTouchPad
@@ -3008,6 +3121,8 @@ def main():
             wx.CallAfter(QMP.notebook.SetSelection, settings.get('last_page', 0))
             wx.CallAfter(QMP.ScanGoogleGameProfilesEvent, None)  # since games list is tab 0, needed this to pre-load games
             wx.CallAfter(QMP.start_microterm)
+            if settings.get('start_mimimized', False):  # minimize at start
+                wx.CallAfter(QMP.Iconize, True )
         
         except Exception as e:
             print("unable to open listening socket for vocola")
@@ -3061,6 +3176,12 @@ def main():
 
 ## Start up code:
 
+# print ('Number of arguments:', len(sys.argv), 'arguments.')
+# print ('Argument List:', str(sys.argv))
+
+# if '-minimize' in sys.argv:
+    # print ('MINIMIZE AT START')
+    # MINIMIZE = True
 
 if not sys.flags.interactive:  # since is non-interactive
     print('start up in normal mode')
