@@ -50,6 +50,7 @@ class QuadStickHID(object):
             elif (product_id == HORI_PRODUCT_ID or product_id == QUADSTICK_PRODUCT_ID+2):
                 self.log( 'QuadStick is in PS4 mode')
                 self._cm.DS4_mode = True # let CM object know reports will be for DS4.
+            print('Open Quadstick.  VendorID: ' + hex(vendor_id) + ' PID: ' + hex(product_id))
             self._data_handler = cm_updater
             self._qs.set_raw_data_handler(self.data_handler)
             self._feature_report_value = None

@@ -19,7 +19,7 @@ def has_serial_ports(): # return true if serial ports exist
     
 class _Microterm(object):
     def __init__(self, mainWindow=None):
-        print("init Microterm")
+        #print("init Microterm")
         self.mainWindow = None
         self.thread = None
         self.serial = None
@@ -51,15 +51,16 @@ class _Microterm(object):
                 self.mainWindow.text_ctrl_messages.AppendText(str(arg))
             self.mainWindow.text_ctrl_messages.AppendText("\n")
         else:
-            print(repr(args))
+            #print(repr(args))
+            pass
 
     def test_serial_port(self, port):
         try:
-            print(( "testing ", port, " please wait...." ))
+            #print(( "testing ", port, " please wait...." ))
             try:
                 ser = serial.Serial(port, 115200, timeout=2)
             except:
-                print(( '*** unable to open serial port: ', port))
+                #print(( '*** unable to open serial port: ', port))
                 raise
             ser.rtscts = False
             ser.xonxoff  = False
@@ -68,18 +69,18 @@ class _Microterm(object):
                 sleep(2)
                 ser.write("\rreset\r".encode())
             except:
-                print(( '*** unable to write to serial port: ', port))
+                #print(( '*** unable to write to serial port: ', port))
                 raise
             try:
                 x = ser.read(100).decode()          # read one hundred bytes
-                print (repr(x))
+                #print (repr(x))
                 if x.find('all outputs reset') > 0:
                     self.log( 'Success!  Found a serial port for quadstick: ', port)
                     ser.timeout = 3.0 # lengthen timeout
                     return ser
                 ser.close()
             except Exception as e:
-                print( "read timeout on port ", port, repr(e))
+                #print( "read timeout on port ", port, repr(e))
                 raise
         except:
             try:
@@ -89,7 +90,7 @@ class _Microterm(object):
         return None
 
     def find_quadstick_serial_port(self):
-        print("find serial connection to quadstick")
+        #print("find serial connection to quadstick")
         # @todo: remember for next time
         ports = list(list_ports.comports())
         if not ports:
@@ -100,7 +101,7 @@ class _Microterm(object):
             old_port = None
             old_port = settings.get('com_port', None)
             #old_port = None
-            print("old port: ", old_port)
+            #print("old port: ", old_port)
             if old_port:
                 ser = self.test_serial_port(old_port)
                 if ser: return ser
@@ -338,7 +339,7 @@ mt_singleton = None
 def microterm(mainWindow=None):
     global mt_singleton
     if mt_singleton is None:
-        print("create connection to quadstick")
+        #print("create connection to quadstick")
         mt = _Microterm(mainWindow)
         if mt.serial:
             mt_singleton = mt        

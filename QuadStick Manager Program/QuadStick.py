@@ -2829,17 +2829,19 @@ class QuadStickPreferences(wx.Frame):
                 print("systeminfo error", repr(e))
             sleep(3.0)
             try:
-                telemetry_log('support_report&' + urllib.parse.urlencode(settings))
-                sleep(2.0)
                 print("tmp_log_path", tmp_log_path)
                 sys.stdout = original_stdout
                 sys.stderr = original_stderr
-                sleep(3.0)
-                logfile.close()
-                with open(tmp_log_path, "r", 0) as tmp_file:
-                    telemetry_log('message_log&' + urllib.parse.quote_plus(tmp_file.read()))
+                try:
+                    logfile.close()
+                except:
+                    pass
+                with open(tmp_log_path, "r") as tmp_file:
+                    logtext = tmp_file.read()
+                    telemetry_log('message_log&' + urllib.parse.quote_plus(logtext))
             except Exception as e:
-                print(repr(e))
+                self.text_ctrl_messages.AppendText(repr(e))
+            sleep(3.0)
             self.text_ctrl_messages.AppendText("Debug report sent.  Restart QMP.\r\n")
         dlg.Destroy()
 
@@ -3008,8 +3010,8 @@ def main():
     # redirect stdout to file when running under pythonw, if you don't
     # eventually the program stops working with no indication as to why
     print(str(sys.executable))
+    tmp_log_path = tempfile.gettempdir() + '\\quad_stick_log_file.txt'
     if sys.executable.find('python.exe') == -1:
-        tmp_log_path = tempfile.gettempdir() + '\\quad_stick_log_file.txt'
         logfile = open(tmp_log_path, 'wt')
         sys.stdout = sys.stderr = logfile
         print(repr(logfile))
@@ -3139,7 +3141,7 @@ def main():
         # closing window.  Shut everything down.
         if Vocola:
             Vocola.kill()
-        print("main loop exiting")
+        #print("main loop exiting")
         try:
             if TIR:
                 TIR.close()
@@ -3166,7 +3168,7 @@ def main():
             if SERIAL_PORT_SOCKET:
                 SERIAL_PORT_SOCKET.close()
                 SERIAL_PORT_SOCKET = None
-                print("UDP Vocola command Listening socket closed")
+                #print("UDP Vocola command Listening socket closed")
             if MT:
                 MT.close()
         except Exception as e:

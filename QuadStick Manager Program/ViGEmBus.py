@@ -237,9 +237,11 @@ class VirtualGamepadEmulator(object):
                 # qs_data may contain the next packet
 
                 #print(self._write_report, self._write_report[0])
-        except:
+        except Exception as e:
             self.alive = False
-            print('!!!!!! Exception in ViGEmBus updater thread !!!!!!')
+            print('Exception in ViGEmBus thread: ', repr(e))
+            print(traceback.format_exc())
+            self._log('!!!!!! Exception in ViGEmBus updater thread !!!!!!')
             raise
 
     def update_X360_with_PS3 (self, qs_data):  # QS not in PS4 boot mode
@@ -420,7 +422,7 @@ class VirtualGamepadEmulator(object):
         pass
 
     def update_DS4_with_DS4 (self, qs_data):
-        print (repr(qs_data))
+        #print (repr(qs_data))
         
         self.gamepad.report = self.vg.win.vigem_commons.DS4_REPORT_EX.from_buffer(bytearray(qs_data[1:] + [0,0,0,0,0,0,0,0,0]))
         #self.gamepad.report.ReportBuffer = bytes(qs_data[1:])
