@@ -140,7 +140,9 @@ class VocolaListenerThread(threading.Thread):
                     data = data.decode()
                     if data.find("BRING TO FRONT") >= 0:
                         self._mainWindow.Raise()
-                        BringToFront(self._mainWindow.GetHandle())
+                        self._mainWindow.Show()
+                        self._mainWindow.Restore()
+                        #BringToFront(self._mainWindow.GetHandle())
                         self._mainWindow.Raise()
                         continue
                     if data.find("LOAD: ") >= 0:

@@ -52,7 +52,9 @@ class QuadStickHID(object):
                 self._cm.DS4_mode = True # let CM object know reports will be for DS4.
             print('Open Quadstick.  VendorID: ' + hex(vendor_id) + ' PID: ' + hex(product_id))
             self._data_handler = cm_updater
-            self._qs.set_raw_data_handler(self.data_handler)
+            self._qs.set_raw_data_handler(cm_updater)
+            
+            #self._qs.set_raw_data_handler(self.data_handler)
             self._feature_report_value = None
             self._output_report_value = None
             return self
@@ -69,7 +71,7 @@ class QuadStickHID(object):
             
     def check_status(self):
         if self._qs:
-            print("quadstick hid status: Active= ", self._qs.is_active(), " Open= ", self._qs.is_opened(), " Plugged= ", self._qs.is_plugged())
+            self.log("quadstick hid status: Active= ", self._qs.is_active(), " Open= ", self._qs.is_opened(), " Plugged= ", self._qs.is_plugged())
 
     def close(self):
         if self._qs: 
@@ -77,7 +79,7 @@ class QuadStickHID(object):
             self._qs = None
 
     def data_handler(self, data, new_handler=None):  # take data from QS and relay it to CM
-        #print ".",
+        #print (".",)
         if new_handler:
             self._data_handler = new_handler
             return

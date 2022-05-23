@@ -64,6 +64,7 @@ from mouse import *
 from googledrive import *
 from textstrings import *
 
+DEBUG = False
 settings = qsflash.settings
 preferences = qsflash.preferences
 tmp_log_path = None
@@ -1685,12 +1686,13 @@ class QuadStickPreferences(wx.Frame):
 
         scratch = settings.copy()
         telemetry_log('loadprefs&' + urllib.parse.urlencode(scratch.pop("preferences")))
-        scratch.pop("games")
-        ugp = scratch.pop("user_game_profiles")  # a list of user game profiles
-        ugp = {i:ugp[i] for i in range(0, len(ugp))}  # convert to simple dict
-        telemetry_log('user_game_profiles&' + urllib.parse.urlencode(ugp))
-        scratch.pop("voices")
-        scratch.pop("builds")
+        scratch.pop("games", None)
+        ugp = scratch.pop("user_game_profiles", None)  # a list of user game profiles
+        if ugp:
+            ugp = {i:ugp[i] for i in range(0, len(ugp))}  # convert to simple dict
+            telemetry_log('user_game_profiles&' + urllib.parse.urlencode(ugp))
+        scratch.pop("voices", None)
+        scratch.pop("builds", None)
         scratch['drive'] = d  
         telemetry_log('settings&' + urllib.parse.urlencode(scratch))
 
@@ -3060,6 +3062,11 @@ def main():
         Vocola = None
         try:
 
+            SERIAL_PORT_SOCKET.bind((UDP_IP, UDP_PORT))
+            print("start a listening thread to receive and display messages from vocola")
+            Vocola = VocolaListenerThread(QMP, SERIAL_PORT_SOCKET, QS)
+            Vocola.start()
+
             print("Show Window")
             # https://src.chromium.org/viewvc/chrome/trunk/src/ui/views/win/fullscreen_handler.cc?revision=HEAD&view=markup
             # http://stackoverflow.com/questions/2382464/win32-full-screen-and-hiding-taskbar#5299718
@@ -3071,10 +3078,11 @@ def main():
             QMP.Show()
             try:
                 VG = VirtualGamepadEmulator(QMP)  # Opens the DLL, regardless of the presence of a VG
+                VG.DEBUG = DEBUG
                 QMP.VG = VG
                 QS = QuadStickHID(QMP, VG)
                 QS.enable(settings.get('enable_VGX', True) or settings.get('enable_VG4', True)) # if either emulation is enabled, enable the QS interface
-                QS.open(VG.update) # None if QS did not open
+                QS.open(VG.unbuffered_update) #update) # None if QS did not open
                 if QMP.checkbox_enable_vg_X360.GetValue() or QMP.checkbox_enable_vg_DS4.GetValue():
                     VG.open() # if cronusmax preset
                     VG.start()
@@ -3109,11 +3117,6 @@ def main():
             except Exception as e:
                 print("Exception during open UltraStik ", repr(e))
 
-            SERIAL_PORT_SOCKET.bind((UDP_IP, UDP_PORT))
-            print("start a listening thread to receive and display messages from vocola")
-            Vocola = VocolaListenerThread(QMP, SERIAL_PORT_SOCKET, QS)
-            Vocola.start()
-
             QMP.QS = QS # used for checkbox event
             if qmp_url:
                 wx.CallAfter(QMP.csv_files_dropped, None, None, qmp_url)
@@ -3126,6 +3129,8 @@ def main():
             if settings.get('start_mimimized', False):  # minimize at start
                 wx.CallAfter(QMP.Iconize, True )
         
+            app.MainLoop()  # 
+        
         except Exception as e:
             print("unable to open listening socket for vocola")
             print(repr(e))
@@ -3136,8 +3141,6 @@ def main():
                 # pass qmp_filename to other copy of QMP
                 SERIAL_PORT_SOCKET.sendto(("LOAD: " + qmp_url).encode(), (UDP_IP, UDP_PORT))
 
-        app.MainLoop()  # 
-        
         # closing window.  Shut everything down.
         if Vocola:
             Vocola.kill()
@@ -3184,6 +3187,10 @@ def main():
 # if '-minimize' in sys.argv:
     # print ('MINIMIZE AT START')
     # MINIMIZE = True
+    
+if '-debug' in sys.argv:
+    DEBUG = True
+
 
 if not sys.flags.interactive:  # since is non-interactive
     print('start up in normal mode')

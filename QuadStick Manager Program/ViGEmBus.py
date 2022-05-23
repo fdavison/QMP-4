@@ -10,6 +10,7 @@ import queue
 import threading
 import ctypes
 
+
 '''
 Opens Virtual Game Emulator Bus DLL
 
@@ -150,6 +151,7 @@ class VirtualGamepadEmulator(object):
         self._log = mainWindow.text_ctrl_messages.AppendText
         self._q = queue.Queue()
         self._qs_data = None
+        self.DEBUG = None
         
         # when quadstick hid interface is opened the next two varibles will be assigned
         self.DS4_mode = False  # mode the quadstick is in
@@ -180,6 +182,7 @@ class VirtualGamepadEmulator(object):
         if self.alive:
             self._log('closing virtual gamepad emulator\n')
         self.stop()
+        self.emulated_controller_type = 0
         self.gamepad = None # this should close and delete the virtual gamepad
         
     def stop(self):
@@ -243,6 +246,31 @@ class VirtualGamepadEmulator(object):
             print(traceback.format_exc())
             self._log('!!!!!! Exception in ViGEmBus updater thread !!!!!!')
             raise
+            
+            
+    def unbuffered_update (self, qs_data):
+        if self.DEBUG: self._log(repr(qs_data))
+        try:
+            if self.emulated_controller_type == 1:  # emulating an xbox controller
+                if self.DS4_mode:
+                    self.update_X360_with_PS4(qs_data)
+                elif self.X360CE_mode:
+                    self.update_X360_with_X360CE(qs_data)
+                else:
+                    self.update_X360_with_PS3(qs_data)
+            elif self.emulated_controller_type == 2: # emulating DS4 controller
+                if self.DS4_mode:
+                    self.update_DS4_with_DS4(qs_data)
+                elif self.X360CE_mode:
+                    self.update_DS4_with_X360CE(qs_data)
+                else:
+                    self.update_DS4_with_PS3(qs_data)
+        except Exception as e:
+            print ('Unbuffered update exception:', repr(e))
+            print(traceback.format_exc())
+            self._log("Error in virtual gamepad update.  Restart QMP")
+
+
 
     def update_X360_with_PS3 (self, qs_data):  # QS not in PS4 boot mode
         #print (repr(qs_data))
@@ -419,6 +447,7 @@ class VirtualGamepadEmulator(object):
         self.gamepad.update()
         
     def update_DS4_with_X360CE (self, qs_data):
+        print ('update_DS4_with_X360CE: ', repr(qs_data))
         pass
 
     def update_DS4_with_DS4 (self, qs_data):
