@@ -1656,6 +1656,7 @@ class QuadStickPreferences(wx.Frame):
 
     def load_initial_values(self): #FGD
         global settings
+        global preferences
         self.text_ctrl_messages.AppendText("Version: " + VERSION + "\r\n")
         vocola_installed = os.path.isdir(VocolaPath)
         if not vocola_installed:
@@ -1678,23 +1679,30 @@ class QuadStickPreferences(wx.Frame):
             # update status box
             self.text_ctrl_messages.AppendText("Loaded preferences OK\n")
             # send telemetry for QMP settings
+            settings['preferences'] = preferences
         else: 
             # disable any tabs that need the quadstick
             self.text_ctrl_messages.AppendText("Using previously saved preference values\n")
         if d is None:
             self.download_selected_build.Disable()
 
-        scratch = settings.copy()
-        telemetry_log('loadprefs&' + urllib.parse.urlencode(scratch.pop("preferences")))
-        scratch.pop("games", None)
-        ugp = scratch.pop("user_game_profiles", None)  # a list of user game profiles
-        if ugp:
-            ugp = {i:ugp[i] for i in range(0, len(ugp))}  # convert to simple dict
-            telemetry_log('user_game_profiles&' + urllib.parse.urlencode(ugp))
-        scratch.pop("voices", None)
-        scratch.pop("builds", None)
-        scratch['drive'] = d  
-        telemetry_log('settings&' + urllib.parse.urlencode(scratch))
+        try:
+            scratch = settings.copy()
+            prefs = scratch.pop("preferences", None)
+            if prefs:
+                telemetry_log('loadprefs&' + urllib.parse.urlencode(prefs))
+            scratch.pop("games", None)
+            ugp = scratch.pop("user_game_profiles", None)  # a list of user game profiles
+            if ugp:
+                ugp = {i:ugp[i] for i in range(0, len(ugp))}  # convert to simple dict
+                telemetry_log('user_game_profiles&' + urllib.parse.urlencode(ugp))
+            scratch.pop("voices", None)
+            scratch.pop("builds", None)
+            scratch['drive'] = d  
+            telemetry_log('settings&' + urllib.parse.urlencode(scratch))
+        except Exception as e:
+            print ("initial values telemetry error", repr(e))
+            print (traceback.format_exc())
 
         # make sure mouse capture settings have initial default values
         settings['mouse_capture_mode'] = settings.get('mouse_capture_mode', "Off").strip()
@@ -2541,6 +2549,11 @@ class QuadStickPreferences(wx.Frame):
             self.TechsupportReport()
         if value == 341: #"F2"
             self.QS.check_status()
+        if value == 342: #"F3"
+            self.VG.DEBUG = not self.VG.DEBUG
+        if value == 343: #"F4"
+            self.QS.close()   # reopen QS
+
         #print "keycode: ", int(value)
         event.Skip()
     def KeyDownEvent2(self, event):
@@ -2565,6 +2578,8 @@ class QuadStickPreferences(wx.Frame):
             self.TechsupportReport()
         if value == 341: #"F2"
             self.QS.check_status()
+        if value == 342: #"F3"
+            self.VG.DEBUG = not self.VG.DEBUG
         #print "keycode: ", int(value)
         event.Skip()
     def KeyUpEvent(self, event):
@@ -3129,6 +3144,7 @@ def main():
             if settings.get('start_mimimized', False):  # minimize at start
                 wx.CallAfter(QMP.Iconize, True )
         
+            
             app.MainLoop()  # 
         
         except Exception as e:

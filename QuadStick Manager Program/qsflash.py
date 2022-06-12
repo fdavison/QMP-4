@@ -50,6 +50,8 @@ defaults = {
 
 APPDATA = os.environ['APPDATA']
 
+print ("APPDATA: ", APPDATA)
+
 settings_file = APPDATA + "\\QMP_3_settings.repr"
 old_settings_file = APPDATA + "\\quadstick_settings.repr"
 settings = dict()
@@ -80,13 +82,13 @@ def read_repr_file():
             print("no old repr file either")
             pass
         settings.clear() #return NEW blank dictionary
-    #print repr(settings)
+    #print ("Read settings file:  ", repr(settings))
     return settings
 
 def save_repr_file(settings):
     f = open(settings_file, 'w')
     settings_string = repr(settings)
-    #print "save settings: ", settings_string
+    #print ("save settings: ", settings_string)
     f.write(settings_string)
     f.flush()
     f.close()

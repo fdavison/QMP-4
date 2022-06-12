@@ -249,7 +249,7 @@ class VirtualGamepadEmulator(object):
             
             
     def unbuffered_update (self, qs_data):
-        if self.DEBUG: self._log(repr(qs_data))
+        if self.DEBUG: self._log(repr(qs_data) + '\n')
         try:
             if self.emulated_controller_type == 1:  # emulating an xbox controller
                 if self.DS4_mode:
