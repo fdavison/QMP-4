@@ -32,7 +32,7 @@ version_url = "http://qmp2version.quadstick.com"
 
 #telemetery_url = "https://telemetry.quadstick.com"
 
-VERSION = '4.00.07'
+VERSION = '4.01.0'
 
 IDHASH = str(uuid.getnode())
 print(VERSION, IDHASH)

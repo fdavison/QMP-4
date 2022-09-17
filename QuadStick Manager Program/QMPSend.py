@@ -15,8 +15,8 @@ def main():
                              socket.SOCK_DGRAM) # UDP
             SERIAL_PORT_SOCKET.sendto("\b" + sys.argv[-1] + "\r", (UDP_IP, UDP_PORT))
             #print "sent: ", sys.argv[-1]
-    except Exception, e:
-        print repr(e)
+    except Exception as e:
+        print (repr(e))
     sys.exit()
     
 main()
