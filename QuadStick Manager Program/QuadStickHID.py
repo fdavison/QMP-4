@@ -216,4 +216,7 @@ class QuadStickHID(object):
         for arg in args:
             self._log(str(arg))
         self._log("\n")
-
+    def get_path(self):
+        if self._qs: 
+            return self._qs.device_path
+        return None

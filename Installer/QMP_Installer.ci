@@ -385,7 +385,7 @@ You will be given another chance to restart when all programs are installed.</>
                   <desc ></>
                   <type >info</>
                   <caption ></>
-                  <text >The HIDEHid installer will run next.
+                  <text >The HIDHide installer will run next.
 
 When prompted to restart after the HIDHide installer runs, choose "No, restart manually later".  
 

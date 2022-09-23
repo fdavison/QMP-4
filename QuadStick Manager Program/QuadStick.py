@@ -52,6 +52,7 @@ import sys
 
 import xlsx2csv
 import qsflash
+import HIDHide
 
 from qsflash import *
 from vocola import *
@@ -79,6 +80,7 @@ US1 = None
 US2 = None
 TIR = None
 MOUSE = None
+H = None   # HIDHide handler
 
 SERIAL_PORT_SOCKET = None
 
@@ -956,8 +958,9 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox_enable_vg_DS4.SetToolTip(_("Enables the ViGEmBus DS4 virtual controller.  Allows playing PC games that use the DS4 controller, or Playstation Remote Play"))
         sizer_68.Add(self.checkbox_enable_vg_DS4, 0, 0, 0)
 
-        static_line_1 = wx.StaticLine(self.notebook_misc, wx.ID_ANY)
-        sizer_68.Add(static_line_1, 0, wx.EXPAND, 0)
+        self.checkbox__enable_HIDHide = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Enable HIDHide to hide Quadstick from games"))
+        self.checkbox__enable_HIDHide.SetToolTip(_("When using an XBox or DS4 virtual controller, this setting prevents games and other programs from detecting the presence of the Quadstick's controller interface if they detect activity from older Direct Input controllers."))
+        sizer_68.Add(self.checkbox__enable_HIDHide, 0, 0, 0)
 
         sizer_1 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("QMP settings")), wx.VERTICAL)
         sizer_17.Add(sizer_1, 1, wx.EXPAND, 0)
@@ -1320,6 +1323,7 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.EnableUsbCommEvent, self.checkbox_enable_usb_comm)
         self.Bind(wx.EVT_CHECKBOX, self.vgXBoxEvent, self.checkbox_enable_vg_X360)
         self.Bind(wx.EVT_CHECKBOX, self.vgDS4Event, self.checkbox_enable_vg_DS4)
+        self.Bind(wx.EVT_CHECKBOX, self.ToggleHIDHideStatus, self.checkbox__enable_HIDHide)
         self.Bind(wx.EVT_BUTTON, self.DownloadFirmwareEvent, self.download_selected_build)
         self.Bind(wx.EVT_TEXT_ENTER, self.onMessagePaneEnter, self.voice_transcript)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.DeleteFromVocolaEvent, self.list_box_voice_files)
@@ -3005,6 +3009,17 @@ class QuadStickPreferences(wx.Frame):
         # self.grid_1.AutoSizeColumns(True)
 
 
+    def ToggleHIDHideStatus(self, event):  # wxGlade: QuadStickPreferences.<event_handler>
+        print("Event handler 'ToggleHIDHideStatus' ")
+        flag = event.GetEventObject().GetValue()
+        try:
+            if flag:
+                H.hide_quadstick(QS)
+            else:
+                H.unhide_quadstick(QS)
+        except:
+            pass
+        event.Skip()
 # end of class QuadStickPreferences
 
 
@@ -3020,6 +3035,7 @@ def main():
     global MOUSE
     global logfile
     global tmp_log_path
+    global H
     
     global MT
     MT = None
@@ -3032,6 +3048,7 @@ def main():
         logfile = open(tmp_log_path, 'wt')
         sys.stdout = sys.stderr = logfile
         print(repr(logfile))
+    print(str(sys.executable))
     print("QMP starting. Version: ", VERSION)
 
     try:
@@ -3060,6 +3077,8 @@ def main():
     read_repr_file() # load global settings
     # create the Microterm singleton used for voice and other commands
     QMP.microterm = None
+    # set up HIDEHide
+ 
     print("Load initial values")
     if QMP.load_initial_values():
         print("Initial values loaded")
@@ -3095,6 +3114,12 @@ def main():
                 VG = VirtualGamepadEmulator(QMP)  # Opens the DLL, regardless of the presence of a VG
                 VG.DEBUG = DEBUG
                 QMP.VG = VG
+                try:  # set up HIDHide to allow QMP to see the Quadstick
+                    H = HIDHide.HIDHide(QMP)
+                    H.check_for_quadstick_registration()
+                except Exception as e:
+                    print (repr(e))
+
                 QS = QuadStickHID(QMP, VG)
                 QS.enable(settings.get('enable_VGX', True) or settings.get('enable_VG4', True)) # if either emulation is enabled, enable the QS interface
                 QS.open(VG.unbuffered_update) #update) # None if QS did not open
@@ -3109,6 +3134,17 @@ def main():
                 print(repr(e))
                 settings['ViGEmBus'] = str(e)
                 QMP.text_ctrl_messages.AppendText('ViGEmBus driver not found\r\n')
+            try:  # initialize the checkbox on the Misc tab
+                if H.is_installed():
+                    QMP.checkbox__enable_HIDHide.SetValue(H.is_hidden(QS))
+                else:
+                    QMP.checkbox__enable_HIDHide.Disable()
+            except Exception as e:
+                print (repr(e))
+            try:
+                Vocola.qs = QS # vocola initialization was moved up for some forgetton reason but it needs a reference to the quadstick
+            except Exception as e:
+                print (repr(e))
             try:
                 # now open ultrastick
                 US1 = UltraStikHID(QMP)
