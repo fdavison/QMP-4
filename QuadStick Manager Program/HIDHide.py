@@ -34,11 +34,12 @@ class HIDHide(object):
             key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, REG_PATH, 0, winreg.KEY_READ)
             self.H_path = winreg.QueryValueEx(key, 'Path')[0]
             print (self.H_path)  # 'C:\\Program Files\\Nefarius Software Solutions\\HidHide\\'
+            self._log("HIDHide found\r\n")
             winreg.CloseKey(key)
         except Exception as e:
-            print (repr(e))
+            print ('HIDHide init exception ' + repr(e))
             self.H_path = None
-            self._log("HIDHide not found\r\n")
+            # self._log("HIDHide not found\r\n")
         if self.H_path:
             self.H_path = self.H_path + "x64\\HidHideCLI.exe"
             
@@ -60,7 +61,7 @@ class HIDHide(object):
         except Exception as e:
             if self.H_path:
                 self._log("QMP was unable to check HIDHide registration.  Please close the HIDHide Configuration Client if it is open\r\n")
-            print (repr(e))
+            print ('HIDHide check_for_quadstick_registration exception '+ repr(e))
             return False
         
     def is_installed(self):

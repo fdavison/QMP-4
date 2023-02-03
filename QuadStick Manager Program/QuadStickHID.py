@@ -26,11 +26,12 @@ class QuadStickHID(object):
         self._old_data = None
         self._cm = CM
 
-    def open(self, cm_updater):
+    def open(self): #, cm_updater):
         try:
             ids = ((QUADSTICK_VENDOR_ID, QUADSTICK_PRODUCT_ID), \
                    (QUADSTICK_VENDOR_ID, QUADSTICK_PRODUCT_ID+1,), \
                    (QUADSTICK_VENDOR_ID, QUADSTICK_PRODUCT_ID+2,), \
+                   (QUADSTICK_VENDOR_ID, QUADSTICK_PRODUCT_ID+3,), \
                    (QUADSTICK_VENDOR_ID_OLD, QUADSTICK_PRODUCT_ID_OLD),
                    (HORI_VENDOR_ID, HORI_PRODUCT_ID))
             quadsticks = []
@@ -42,26 +43,35 @@ class QuadStickHID(object):
             #print qs
             self._qs.open()
             self.log( 'QuadStick Game Controller interface successfully opened' )
+            #self.log( self._qs.product_name )
+            if self._cm:  # clear out ViGEmBus settings regarding mode quadstick is in
+                self._cm.X360CE_mode = False
+                self._cm.DS4_mode = False
             if product_id == (QUADSTICK_PRODUCT_ID+1):
                 self.log( 'QuadStick is in X360CE mode.'  )
-                self._cm.X360CE_mode = True
+                if self._cm:
+                    self._cm.X360CE_mode = True
                 #if int(preferences.get('enable_usb_comm', 0)) > 0:
                     #self.log( '**USB commands and CronusMax connection will not work in X360CE mode**' )
-            elif (product_id == HORI_PRODUCT_ID or product_id == QUADSTICK_PRODUCT_ID+2):
-                self.log( 'QuadStick is in PS4 mode')
-                self._cm.DS4_mode = True # let CM object know reports will be for DS4.
+            elif (product_id == HORI_PRODUCT_ID or product_id == QUADSTICK_PRODUCT_ID+2 or product_id == QUADSTICK_PRODUCT_ID+3):
+                # the same id is used in usb mode 6, which is not supplying PS4 packets
+                if (self._qs.product_name == 'Quad Stick PS4 mode'):
+                    self.log( 'QuadStick is in PS4 mode')
+                    if self._cm:
+                        self._cm.DS4_mode = True # let CM object know reports will be for DS4.
             print('Open Quadstick.  VendorID: ' + hex(vendor_id) + ' PID: ' + hex(product_id))
-            self._data_handler = cm_updater
-            self._qs.set_raw_data_handler(cm_updater)
+            if self._cm:
+                self._data_handler = self._cm.unbuffered_update
+                self._qs.set_raw_data_handler(self._cm.unbuffered_update)
             
             #self._qs.set_raw_data_handler(self.data_handler)
             self._feature_report_value = None
             self._output_report_value = None
             return self
         except Exception as e:
-            print("Open QuadStick HID exception: ", repr(e))
-            traceback.print_exc(5, file=sys.stdout)
-            self.log( 'QuadStick Game Controller is not connected to PC' )
+            #print("Open QuadStick HID exception: ", repr(e))
+            #traceback.print_exc(5, file=sys.stdout)
+            #self.log( 'QuadStick Game Controller is not connected to PC' )
             try:
                 self._qs.close() # attempt to close if error occurred after open
             except:

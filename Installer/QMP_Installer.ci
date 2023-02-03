@@ -3,14 +3,14 @@
    <autoclose >1</>
    <compname >QuadStick</>
    <produrl >http://quadstick.com</>
-   <ver >4.01.0</>
+   <ver >4+</>
    <supurl ></>
    <updurl ></>
    <dlgfont >verdana</>
    <headlogo >default - 1</>
    <dlgfontsize >s8</>
    <output >$prjpath$</>
-   <exename >QMP_Installer_4.01.0.exe</>
+   <exename >QMP_Installer_4.exe</>
    <beffile ></>
    <aftfile ></>
    <uninclude >1</>
@@ -22,8 +22,8 @@
    <volsize ></>
    <volpattern >disk%i.pak</>
    <password ></>
-   <progname >QuadStick</>
-   <appname ></>
+   <progname >Quadstick</>
+   <appname >Quadstick Manager Program</>
    <bl ></>
    <blurl ></>
    <unpath >inst</>
@@ -328,7 +328,7 @@
                   <desc ></>
                   <type >info</>
                   <caption ></>
-                  <text >The ViGEmBus installer will run next.
+                  <text >The optional ViGEmBus installer will run next.
 
 When prompted to restart after the ViGEmBus installer runs, choose "No, restart manually later".  
 

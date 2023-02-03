@@ -571,16 +571,18 @@ class QuadStickPreferences(wx.Frame):
         # begin wxGlade: QuadStickPreferences.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((1486, 980))
+        self.SetSize((1200, 700))
         self.SetTitle(_("QuadStick"))
         self.SetToolTip(_("Change preference settings for QuadStick"))
 
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
 
         self.notebook = wx.Notebook(self, wx.ID_ANY, style=0)
+        self.notebook.SetMinSize((-1, 500))
         sizer_2.Add(self.notebook, 4, wx.EXPAND, 0)
 
         self.notebook_game_files = wx.Panel(self.notebook, wx.ID_ANY)
+        self.notebook_game_files.SetMinSize((1176, 496))
         self.notebook.AddPage(self.notebook_game_files, _("Game Files"))
 
         sizer_22 = wx.BoxSizer(wx.HORIZONTAL)
@@ -616,31 +618,15 @@ class QuadStickPreferences(wx.Frame):
         self.panel_18 = wx.Panel(self.notebook_game_files, wx.ID_ANY)
         sizer_63.Add(self.panel_18, 1, wx.EXPAND, 0)
 
-        sizer_24 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("Game profiles")), wx.VERTICAL)
-        sizer_22.Add(sizer_24, 4, wx.EXPAND, 0)
-
-        sizer_50 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_24.Add(sizer_50, 4, wx.EXPAND, 0)
-
-        sizer_52 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("QuadStick Factory")), wx.HORIZONTAL)
-        sizer_50.Add(sizer_52, 1, wx.EXPAND, 0)
+        sizer_3 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("Quadstick Factory profiles")), wx.VERTICAL)
+        sizer_22.Add(sizer_3, 2, wx.EXPAND, 0)
 
         self.online_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
         self.online_game_files_list.SetToolTip(_("Double Click to edit. Drag over to download into to QuadStick flash."))
-        sizer_52.Add(self.online_game_files_list, 4, wx.EXPAND, 0)
-
-        sizer_53 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom")), wx.HORIZONTAL)
-        sizer_50.Add(sizer_53, 1, wx.EXPAND, 0)
-
-        self.user_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
-        self.user_game_files_list.SetToolTip(_("Double Click to Edit.  Drag over to download into to QuadStick flash."))
-        sizer_53.Add(self.user_game_files_list, 4, wx.EXPAND, 0)
-
-        sizer_25 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_24.Add(sizer_25, 1, wx.EXPAND, 0)
+        sizer_3.Add(self.online_game_files_list, 4, wx.EXPAND, 0)
 
         sizer_49 = wx.BoxSizer(wx.VERTICAL)
-        sizer_25.Add(sizer_49, 1, wx.EXPAND, 0)
+        sizer_3.Add(sizer_49, 1, wx.EXPAND, 0)
 
         self.button_edit_spreadsheet = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Open Configuration Spreadsheet"))
         self.button_edit_spreadsheet.SetToolTip(_("Opens browser on the selected configuration spreadsheet"))
@@ -650,8 +636,15 @@ class QuadStickPreferences(wx.Frame):
         self.button_download_csv.SetToolTip(_("Download a game's custom CSV file into the QuadStick"))
         sizer_49.Add(self.button_download_csv, 1, wx.EXPAND, 0)
 
+        sizer_8 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom profiles")), wx.VERTICAL)
+        sizer_22.Add(sizer_8, 2, wx.EXPAND, 0)
+
+        self.user_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
+        self.user_game_files_list.SetToolTip(_("Double Click to Edit.  Drag over to download into to QuadStick flash."))
+        sizer_8.Add(self.user_game_files_list, 4, wx.EXPAND, 0)
+
         sizer_48 = wx.BoxSizer(wx.VERTICAL)
-        sizer_25.Add(sizer_48, 1, wx.EXPAND, 0)
+        sizer_8.Add(sizer_48, 1, wx.EXPAND, 0)
 
         self.button_add_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Add Game to User List"))
         self.button_add_user_game.SetToolTip(_("Click button and paste URL for a custom configuration spreadsheet into the dialog box"))
@@ -660,6 +653,8 @@ class QuadStickPreferences(wx.Frame):
         self.button_remove_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Remove Game from User List"))
         self.button_remove_user_game.SetToolTip(_("Removes the selected User Custom game from the list."))
         sizer_48.Add(self.button_remove_user_game, 1, wx.EXPAND, 0)
+
+        sizer_48.Add((0, 0), 0, 0, 0)
 
         self.notebook_joystick = wx.Panel(self.notebook, wx.ID_ANY)
         self.notebook.AddPage(self.notebook_joystick, _("Joystick"))
@@ -1077,7 +1072,7 @@ class QuadStickPreferences(wx.Frame):
         sizer_39 = wx.BoxSizer(wx.VERTICAL)
 
         sizer_41 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_39.Add(sizer_41, 4, wx.EXPAND, 0)
+        sizer_39.Add(sizer_41, 0, wx.EXPAND, 0)
 
         sizer_42 = wx.BoxSizer(wx.VERTICAL)
         sizer_41.Add(sizer_42, 1, wx.EXPAND, 0)
@@ -1246,12 +1241,13 @@ class QuadStickPreferences(wx.Frame):
         mouse_capture_settings.Add(self.StartMouseCapture, 2, wx.EXPAND, 0)
 
         self.panel_17 = wx.Panel(self.notebook_external_pointers, wx.ID_ANY)
-        sizer_39.Add(self.panel_17, 1, wx.EXPAND, 0)
+        sizer_39.Add(self.panel_17, 0, wx.EXPAND, 0)
 
         message_pane_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_2.Add(message_pane_sizer, 1, wx.EXPAND, 0)
+        sizer_2.Add(message_pane_sizer, 1, wx.ALL | wx.EXPAND, 0)
 
         self.message_pane_panel = wx.Panel(self, wx.ID_ANY)
+        self.message_pane_panel.SetMinSize((-1, 200))
         message_pane_sizer.Add(self.message_pane_panel, 6, wx.EXPAND, 0)
 
         sizer_5 = wx.BoxSizer(wx.HORIZONTAL)
@@ -1297,12 +1293,12 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_LIST_BEGIN_DRAG, self.BeginDragFactoryGame, self.online_game_files_list)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnEditSpreadsheet, self.online_game_files_list)
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.GameListSelected, self.online_game_files_list)
+        self.Bind(wx.EVT_BUTTON, self.OnEditSpreadsheet, self.button_edit_spreadsheet)
+        self.Bind(wx.EVT_BUTTON, self.DownloadToQuadStickEvent, self.button_download_csv)
         self.Bind(wx.EVT_LIST_BEGIN_DRAG, self.BeginDragGame, self.user_game_files_list)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnEditSpreadsheet, self.user_game_files_list)
         self.Bind(wx.EVT_LIST_ITEM_RIGHT_CLICK, self.ContextMenuUserGames, self.user_game_files_list)
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.GameListSelected, self.user_game_files_list)
-        self.Bind(wx.EVT_BUTTON, self.OnEditSpreadsheet, self.button_edit_spreadsheet)
-        self.Bind(wx.EVT_BUTTON, self.DownloadToQuadStickEvent, self.button_download_csv)
         self.Bind(wx.EVT_BUTTON, self.UserGamesAdd, self.button_add_user_game)
         self.Bind(wx.EVT_BUTTON, self.UserGamesRemove, self.button_remove_user_game)
         self.Bind(wx.EVT_COMMAND_SCROLL, self.slider_UP_event, self.slider_UP)
@@ -2125,7 +2121,7 @@ class QuadStickPreferences(wx.Frame):
                 path = urllib.parse.quote(gp["name"])
                 d = find_quadstick_drive()
                 print("download csv: ", id, d)
-                if xlsx2csv.write_csv_file_for(id, d): # download and copy csv into quadstick
+                if xlsx2csv.write_csv_file_for(id, d, self): # download and copy csv into quadstick
                     # refresh widget list
                     self.text_ctrl_messages.AppendText("Copied %s into QuadStick\n" % (info["csv_name"],))
                     self.update_quadstick_flash_files_items()
@@ -2176,7 +2172,7 @@ class QuadStickPreferences(wx.Frame):
                     path = urllib.parse.quote(gp["name"])
                     d = find_quadstick_drive()
                     print("download csv: ", id, d)
-                    if xlsx2csv.write_csv_file_for(id, d): # download and copy csv into quadstick
+                    if xlsx2csv.write_csv_file_for(id, d, self): # download and copy csv into quadstick
                         if self._last_game_list_selected == self.user_game_files_list:
                             info, wb = xlsx2csv.get_config_profile_info(id)
                             if info:  # if the csv filename changed, update user list
@@ -3020,6 +3016,24 @@ class QuadStickPreferences(wx.Frame):
         except:
             pass
         event.Skip()
+        
+    def on_USB_status_timer(self):  # periodically checks the USB status of the Quadstick
+        print ("Check USB status")
+        try:
+            if QS._qs is None:
+                QS.open()
+                if VG:
+                    VG.reset()
+            else:
+                if not QS._qs.is_plugged():
+                    QS.close()
+                    self.text_ctrl_messages.AppendText("Quadstick disconnected\r\n")
+        except Exception as e:
+            print ('USB status exception: ', repr(e))
+            print (traceback.format_exc())
+            pass
+        wx.CallLater(3000, self.on_USB_status_timer)
+
 # end of class QuadStickPreferences
 
 
@@ -3059,7 +3073,7 @@ def main():
                 print("qmp_filename is ", qmp_filename)
                 # read the first line of the file
                 with open(qmp_filename, 'rb') as qmp_file:
-                    qmp_url = qmp_file.readline()
+                    qmp_url = qmp_file.readline() # bytes object
     except Exception as e:
         print("qmp_filename exception: ", repr(e))
     # load_preferences_file()
@@ -3110,30 +3124,40 @@ def main():
             #    win32con.WS_EX_WINDOWEDGE | win32con.WS_EX_CLIENTEDGE | win32con.WS_EX_STATICEDGE))
             #QMP.SetRect((0,0,wx.DisplaySize()[0], wx.DisplaySize()[1]))
             QMP.Show()
+            VG = None
+            QMP.VG = None
             try:
                 VG = VirtualGamepadEmulator(QMP)  # Opens the DLL, regardless of the presence of a VG
                 VG.DEBUG = DEBUG
                 QMP.VG = VG
+                settings['ViGEmBus'] = 'VIGEM_ERROR_NONE'
                 try:  # set up HIDHide to allow QMP to see the Quadstick
                     H = HIDHide.HIDHide(QMP)
                     H.check_for_quadstick_registration()
                 except Exception as e:
-                    print (repr(e))
-
+                    print ('HIDHide init error: ' + repr(e))
+                print('ViGEmBus OK')
+            except Exception as e:
+                print(repr(e))
+                settings['ViGEmBus'] = str(e)
+                QMP.text_ctrl_messages.AppendText('ViGEmBus driver not present\r\n')
+                QMP.checkbox_enable_vg_X360.Disable()
+                QMP.checkbox_enable_vg_DS4.Disable()
+            try:
                 QS = QuadStickHID(QMP, VG)
                 QS.enable(settings.get('enable_VGX', True) or settings.get('enable_VG4', True)) # if either emulation is enabled, enable the QS interface
-                QS.open(VG.unbuffered_update) #update) # None if QS did not open
-                if QMP.checkbox_enable_vg_X360.GetValue() or QMP.checkbox_enable_vg_DS4.GetValue():
+                opened = QS.open() #VG.unbuffered_update) #update) # None if QS did not open
+                if opened is None:
+                    QMP.text_ctrl_messages.AppendText( 'QuadStick Game Controller is not connected to PC\r\n' )
+                if VG and (QMP.checkbox_enable_vg_X360.GetValue() or QMP.checkbox_enable_vg_DS4.GetValue()):
                     VG.open() # if cronusmax preset
                     VG.start()
                         #QMP.console_type = "" #VG.console_type
                 else:
                     QMP.text_ctrl_messages.AppendText('Virtual Gamepad disabled\r\n')
-                settings['ViGEmBus'] = 'VIGEM_ERROR_NONE'
+                print('Quadstick HID OK')
             except Exception as e:
                 print(repr(e))
-                settings['ViGEmBus'] = str(e)
-                QMP.text_ctrl_messages.AppendText('ViGEmBus driver not found\r\n')
             try:  # initialize the checkbox on the Misc tab
                 if H.is_installed():
                     QMP.checkbox__enable_HIDHide.SetValue(H.is_hidden(QS))
@@ -3141,6 +3165,7 @@ def main():
                     QMP.checkbox__enable_HIDHide.Disable()
             except Exception as e:
                 print (repr(e))
+                QMP.checkbox__enable_HIDHide.Disable()
             try:
                 Vocola.qs = QS # vocola initialization was moved up for some forgetton reason but it needs a reference to the quadstick
             except Exception as e:
@@ -3170,13 +3195,14 @@ def main():
 
             QMP.QS = QS # used for checkbox event
             if qmp_url:
-                wx.CallAfter(QMP.csv_files_dropped, None, None, qmp_url)
+                wx.CallAfter(QMP.csv_files_dropped, None, None, qmp_url.decode())
 
             # restore the last active notebook tab
             wx.CallAfter(QMP.set_properties, None)  # older wxpython would call __set_properties at start up.  Now we do it manually
             wx.CallAfter(QMP.notebook.SetSelection, settings.get('last_page', 0))
             wx.CallAfter(QMP.ScanGoogleGameProfilesEvent, None)  # since games list is tab 0, needed this to pre-load games
             wx.CallAfter(QMP.start_microterm)
+            wx.CallAfter(QMP.on_USB_status_timer)  # start monitoring the Quadstick HID status
             if settings.get('start_mimimized', False):  # minimize at start
                 wx.CallAfter(QMP.Iconize, True )
         
@@ -3191,7 +3217,7 @@ def main():
             QMP.Close()
             if qmp_url: # command line parameter with a .qmp file
                 # pass qmp_filename to other copy of QMP
-                SERIAL_PORT_SOCKET.sendto(("LOAD: " + qmp_url).encode(), (UDP_IP, UDP_PORT))
+                SERIAL_PORT_SOCKET.sendto(b"LOAD: " + qmp_url, (UDP_IP, UDP_PORT))
 
         # closing window.  Shut everything down.
         if Vocola:

@@ -14,9 +14,14 @@ UDP_PORT = 47807
 
 
 USERPROFILE = os.environ['USERPROFILE']
-PERSONAL_FOLDER = shell.SHGetFolderPath(0, shellcon.CSIDL_PERSONAL, None, 0)
-VocolaFolder = "\\Natlink\\Vocola\\"
-VocolaPath = PERSONAL_FOLDER + VocolaFolder
+try:
+    PERSONAL_FOLDER = shell.SHGetFolderPath(0, shellcon.CSIDL_PERSONAL, None, 0)
+    VocolaFolder = "\\Natlink\\Vocola\\"
+    VocolaPath = PERSONAL_FOLDER + VocolaFolder
+except Exception as e:
+    print ('Exception while importing Vocola\n')
+    print(repr(e))
+    VocolaPath = ''
 
 def list_voice_files():
     vch_files = list()

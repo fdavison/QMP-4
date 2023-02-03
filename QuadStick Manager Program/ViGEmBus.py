@@ -270,7 +270,8 @@ class VirtualGamepadEmulator(object):
             print(traceback.format_exc())
             self._log("Error in virtual gamepad update.  Restart QMP")
 
-
+    def reset(self):
+        self.gamepad.reset()
 
     def update_X360_with_PS3 (self, qs_data):  # QS not in PS4 boot mode
         #print (repr(qs_data))

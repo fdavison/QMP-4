@@ -88,6 +88,8 @@ def write_temporary_file(name, contents, delete_old=True):
         time.sleep(2)
         tmp_folder = os.mkdir(tmp_folder_path)
     # write zip file to temp folder and unzip it
+    if type(contents) == str:
+        contents = contents.encode()
     with open(tmp_file_path, "wb", 0) as xlsxFile:
         xlsxFile.write(contents)
         xlsxFile.flush()
@@ -123,7 +125,7 @@ def get_config_profile_info_from_url(url):
 
 MAXCOL = 10
 
-def write_csv_file_for(id, drive=None):
+def write_csv_file_for(id, drive=None, QMP=None):
     #open a CSV file for output
     #convert the Workbook into CSV and write it to the file
     #close file and exit.
@@ -144,6 +146,9 @@ def write_csv_file_for(id, drive=None):
             continue
         sheet_type = ws['A1'].value
         if not (sheet_type.find('Profile') >= 0 or sheet_type == 'Preferences' or sheet_type == 'Infrared'):
+            print("Cell A1 does not contain valid value: ", repr(sheet_type))
+            if QMP:
+                QMP.text_ctrl_messages.AppendText('**ERROR** Sheet: ' + str(name) + ' Cell A1 value is invalid: ' + repr(sheet_type) + '\n')
             continue
         i = 0
         for row in ws.rows:
