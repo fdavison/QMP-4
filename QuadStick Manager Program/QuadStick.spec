@@ -1,12 +1,24 @@
 # -*- mode: python -*-
+import os
 
 block_cipher = None
+
+
+def get_locales_data():
+    locales_data = []
+    for locale in os.listdir(os.path.join('./locales')):
+        if not locale.endswith('.pot') and not locale.endswith('.txt'):
+            locales_data.append((
+                os.path.join('./locales', locale, 'LC_MESSAGES/*.mo'),
+                os.path.join('locales', locale, 'LC_MESSAGES')
+            ))
+    return locales_data
 
 
 a = Analysis(['QuadStick.py'],
              pathex=['D:\\Users\\fdavison\\Documents\\GitHub\\QMP-4\\QuadStick Manager Program'],
              binaries=None,
-             datas=None,
+             datas=get_locales_data(),
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None,

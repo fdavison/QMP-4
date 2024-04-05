@@ -1,0 +1,818 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-23 13:07+0100\n"
+"PO-Revision-Date: 2024-03-23 13:07+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Eazy Po 1.0.0.0\n"
+
+#: QuadStick.py:206
+msgid "Mouse capture"
+msgstr ""
+
+#: QuadStick.py:210
+msgid ""
+"Mouse capture active.\n"
+"Press F10 key to exit."
+msgstr ""
+
+#: QuadStick.py:420 QuadStick.py:422
+msgid "Add a User Game Configuration File"
+msgstr ""
+
+#: QuadStick.py:424
+msgid ""
+"\n"
+"There are three ways to add games to the User's Game Files list:\n"
+"\n"
+"1) Open the game configuration spreadsheet in your browser and copy \n"
+"     the URL from the address bar into the box below.\n"
+"\n"
+"     The Google Spreadsheet needs to be either Shared Publicly or \n"
+"     Published to the Web in the File menu of the spreadsheet. \n"
+"\n"
+"2) The URL can also be Dragged from the browser directly into the \n"
+"     User's Game Files list to bypass this prompt.\n"
+"\n"
+"3) Invoking the spreadsheet menu: \"QuadStick->Download into QuadStick using "
+"QMP\"\n"
+"     will share the spreadsheet, add it to this list and copy the "
+"configuration into the \n"
+"     QuadStick automatically."
+msgstr ""
+
+#: QuadStick.py:457
+msgid "OK"
+msgstr ""
+
+#: QuadStick.py:460
+msgid "Cancel"
+msgstr ""
+
+#: QuadStick.py:496
+msgid "File Not Found"
+msgstr ""
+
+#: QuadStick.py:500
+msgid ""
+"\n"
+"Error: Unable to read\n"
+"preferences file\n"
+"from QuadStick"
+msgstr ""
+
+#: QuadStick.py:508
+msgid ""
+"Use Factory\n"
+"Defaults"
+msgstr ""
+
+#: QuadStick.py:512
+msgid "Exit"
+msgstr ""
+
+#: QuadStick.py:544
+msgid "Unable to save"
+msgstr ""
+
+#: QuadStick.py:548
+msgid ""
+"\n"
+"\n"
+"Error: Unable to save\n"
+"preferences file\n"
+"to QuadStick"
+msgstr ""
+
+#: QuadStick.py:552
+msgid "Close"
+msgstr ""
+
+#: QuadStick.py:577
+msgid "QuadStick"
+msgstr ""
+
+#: QuadStick.py:578
+msgid "Change preference settings for QuadStick"
+msgstr ""
+
+#: QuadStick.py:591
+msgid "Game Files"
+msgstr ""
+
+#: QuadStick.py:596
+msgid "In QuadStick"
+msgstr ""
+
+#: QuadStick.py:600
+msgid "Double click to Edit"
+msgstr ""
+
+#: QuadStick.py:609
+msgid ""
+"Load and Run File\n"
+"in QuadStick"
+msgstr ""
+
+#: QuadStick.py:610
+msgid "Requires a USB, Bluetooth or serial connection to the QuadStick"
+msgstr ""
+
+#: QuadStick.py:613
+msgid "Print file list"
+msgstr ""
+
+#: QuadStick.py:614
+msgid "Opens a browser window with the list of files in the QuadStick"
+msgstr ""
+
+#: QuadStick.py:620
+msgid ""
+"Remove\n"
+"from QuadStick"
+msgstr ""
+
+#: QuadStick.py:621
+msgid "Remove the game's profile CSV file from the QuadStick"
+msgstr ""
+
+#: QuadStick.py:627
+msgid "Quadstick Factory profiles"
+msgstr ""
+
+#: QuadStick.py:631
+msgid "Double Click to edit. Drag over to download into to QuadStick flash."
+msgstr ""
+
+#: QuadStick.py:637
+msgid "Open Configuration Spreadsheet"
+msgstr ""
+
+#: QuadStick.py:638
+msgid "Opens browser on the selected configuration spreadsheet"
+msgstr ""
+
+#: QuadStick.py:641
+msgid "Download to QuadStick"
+msgstr ""
+
+#: QuadStick.py:642
+msgid "Download a game's custom CSV file into the QuadStick"
+msgstr ""
+
+#: QuadStick.py:645
+msgid "User Custom profiles"
+msgstr ""
+
+#: QuadStick.py:649
+msgid "Double Click to Edit.  Drag over to download into to QuadStick flash."
+msgstr ""
+
+#: QuadStick.py:655
+msgid "Add Game to User List"
+msgstr ""
+
+#: QuadStick.py:656
+msgid ""
+"Click button and paste URL for a custom configuration spreadsheet into the "
+"dialog box"
+msgstr ""
+
+#: QuadStick.py:659
+msgid "Remove Game from User List"
+msgstr ""
+
+#: QuadStick.py:660
+msgid "Removes the selected User Custom game from the list."
+msgstr ""
+
+#: QuadStick.py:666
+msgid "Joystick"
+msgstr ""
+
+#: QuadStick.py:670
+msgid ""
+"Sets Joystick physical range of motion.\n"
+"\n"
+"Larger numbers make the \n"
+"joystick less sensitive.\n"
+"\n"
+"Click Save preferences \n"
+"after making adjustments."
+msgstr ""
+
+#: QuadStick.py:674
+msgid "Joystick UP movement"
+msgstr ""
+
+#: QuadStick.py:680
+msgid "Link Sliders:"
+msgstr ""
+
+#: QuadStick.py:680
+msgid "all"
+msgstr ""
+
+#: QuadStick.py:680
+msgid "horizontal"
+msgstr ""
+
+#: QuadStick.py:680
+msgid "vertical"
+msgstr ""
+
+#: QuadStick.py:680 QuadStick.py:886
+msgid "none"
+msgstr ""
+
+#: QuadStick.py:685
+msgid "Joystick LEFT movement"
+msgstr ""
+
+#: QuadStick.py:689
+msgid ""
+"Center dead zone.  Set high enough to prevent wandering mouse or joystick."
+msgstr ""
+
+#: QuadStick.py:693
+msgid "Joystick RIGHT movement"
+msgstr ""
+
+#: QuadStick.py:703
+msgid "Joystick DOWN movement"
+msgstr ""
+
+#: QuadStick.py:709
+msgid "Calculated joystick preference values:"
+msgstr ""
+
+#: QuadStick.py:716
+msgid "Preference"
+msgstr ""
+
+#: QuadStick.py:717
+msgid "Value"
+msgstr ""
+
+#: QuadStick.py:718
+msgid "Preferences File values"
+msgstr ""
+
+#: QuadStick.py:722
+msgid "Misc"
+msgstr ""
+
+#: QuadStick.py:729
+msgid "Mouse speed:"
+msgstr ""
+
+#: QuadStick.py:736
+msgid "Mouse speed relative to joystick movement"
+msgstr ""
+
+#: QuadStick.py:739
+msgid "Sip/Puff Max pressure"
+msgstr ""
+
+#: QuadStick.py:746
+#, python-format
+msgid "Maximum pressure to scale to 100% signal"
+msgstr ""
+
+#: QuadStick.py:752
+msgid "Brightness"
+msgstr ""
+
+#: QuadStick.py:759
+msgid "LED brightness"
+msgstr ""
+
+#: QuadStick.py:762
+msgid "Sip/Puff High threshold"
+msgstr ""
+
+#: QuadStick.py:769
+msgid "Pressure at which to trigger output"
+msgstr ""
+
+#: QuadStick.py:775
+msgid "Volume"
+msgstr ""
+
+#: QuadStick.py:782
+msgid "Speaker volume"
+msgstr ""
+
+#: QuadStick.py:785
+msgid "Sip/Puff Low threshold"
+msgstr ""
+
+#: QuadStick.py:792
+msgid "Low pressure threshold."
+msgstr ""
+
+#: QuadStick.py:798
+msgid "D-Pad outer ring"
+msgstr ""
+
+#: QuadStick.py:805
+msgid "Percent joystick deflection to active D-Pad"
+msgstr ""
+
+#: QuadStick.py:808
+msgid "Lip maximum"
+msgstr ""
+
+#: QuadStick.py:815
+msgid "Percent of lip sensor physical movement to exert full signal"
+msgstr ""
+
+#: QuadStick.py:821
+msgid "D-Pad inner ring"
+msgstr ""
+
+#: QuadStick.py:828
+msgid "Percent joystick deflection to active inner D-Pad after delay"
+msgstr ""
+
+#: QuadStick.py:831
+msgid "Lip minimum"
+msgstr ""
+
+#: QuadStick.py:838
+msgid "Percent lip sensor position to activate signal"
+msgstr ""
+
+#: QuadStick.py:847
+msgid "Digital Outputs"
+msgstr ""
+
+#: QuadStick.py:850
+msgid "Digital output 1"
+msgstr ""
+
+#: QuadStick.py:851
+msgid "Controls default Digital Output 1 on/off state"
+msgstr ""
+
+#: QuadStick.py:854
+msgid "Digital output 2"
+msgstr ""
+
+#: QuadStick.py:855
+msgid "Controls default Digital Output 2 on/off state"
+msgstr ""
+
+#: QuadStick.py:858
+msgid "Mouse"
+msgstr ""
+
+#: QuadStick.py:861
+msgid "Enable Circular Dead Zone"
+msgstr ""
+
+#: QuadStick.py:862
+msgid "Select Circular or Square Dead Zone for Joystick"
+msgstr ""
+
+#: QuadStick.py:869
+msgid "Mouse Response Curve: "
+msgstr ""
+
+#: QuadStick.py:870
+msgid "Selects how the joystick position is converted to mouse movement"
+msgstr ""
+
+#: QuadStick.py:873
+msgid "Linear"
+msgstr ""
+
+#: QuadStick.py:873
+msgid "Mixed"
+msgstr ""
+
+#: QuadStick.py:873
+msgid "Parabolic"
+msgstr ""
+
+#: QuadStick.py:877
+msgid "Bluetooth:"
+msgstr ""
+
+#: QuadStick.py:883
+msgid "Device:"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "keyboard"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "game_pad"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "mouse"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "combo"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "joystick"
+msgstr ""
+
+#: QuadStick.py:886
+msgid "ssp"
+msgstr ""
+
+#: QuadStick.py:887
+msgid ""
+"Device mode.  Controls what kind of device QuadStick is for Bluetooth "
+"function"
+msgstr ""
+
+#: QuadStick.py:891
+msgid "Auth:"
+msgstr ""
+
+#: QuadStick.py:895
+msgid "Authentication mode.  Default: 4"
+msgstr ""
+
+#: QuadStick.py:899
+msgid "Enable file management over serial port"
+msgstr ""
+
+#: QuadStick.py:900
+msgid ""
+"Allows external pointer and file commands over Bluetooth or serial port when "
+"QuadStick is not plugged in to the PC"
+msgstr ""
+
+#: QuadStick.py:903
+msgid "Sip/Puff misc"
+msgstr ""
+
+#: QuadStick.py:906
+msgid "Enable select file with side tube"
+msgstr ""
+
+#: QuadStick.py:907
+msgid "Enables Select File for Long Sip on Right side tube "
+msgstr ""
+
+#: QuadStick.py:911
+msgid "Enable swap inputs with side tube"
+msgstr ""
+
+#: QuadStick.py:912
+msgid "Enables Swap Lip input with Long Puff on Right side tube"
+msgstr ""
+
+#: QuadStick.py:918
+msgid "Low threshold delay:"
+msgstr ""
+
+#: QuadStick.py:922
+msgid "Low (or Soft) Sip/Puff signals are sensed after a short delay"
+msgstr ""
+
+#: QuadStick.py:925
+msgid "High threshold delay:"
+msgstr ""
+
+#: QuadStick.py:929
+msgid "Long high threshold Sip/Puffs can "
+msgstr ""
+
+#: QuadStick.py:932
+msgid "USB settings"
+msgstr ""
+
+#: QuadStick.py:935
+msgid "Enable boot in PS4 USB mode"
+msgstr ""
+
+#: QuadStick.py:936
+msgid ""
+"Controls the USB emulation when the QuadStick powers up.  Required if using "
+"the PS4 console or if using Touchpad or motion controls with the virtual DS4 "
+"emulation"
+msgstr ""
+
+#: QuadStick.py:939
+msgid "Titan Two PS4 flag"
+msgstr ""
+
+#: QuadStick.py:940
+msgid ""
+"Disables Playstation authentication responses.  The Titan 2 passes PS4 "
+"authentication requests and responses must be disabled to avoid "
+"interruptions."
+msgstr ""
+
+#: QuadStick.py:943
+msgid "Enable Voice Commands over USB"
+msgstr ""
+
+#: QuadStick.py:944
+msgid "Allows voice commands over USB instead of Bluetooth or Serial cable"
+msgstr ""
+
+#: QuadStick.py:947
+msgid "Enable USB-A Host mode"
+msgstr ""
+
+#: QuadStick.py:948
+msgid ""
+"Must be on to support DS4, UltraStik, or other devices connected to the USB-"
+"A port."
+msgstr ""
+
+#: QuadStick.py:951
+msgid "Virtual gamepad emulator"
+msgstr ""
+
+#: QuadStick.py:954
+msgid "Enable virtual XBox controller emulation"
+msgstr ""
+
+#: QuadStick.py:955
+msgid ""
+"Enables the ViGEmBus XBox virtual controller.  Allows playing PC games that "
+"use the XBox controller, or XBox Remote Play"
+msgstr ""
+
+#: QuadStick.py:958
+msgid "Enable virtual Dualshock 4 emulation"
+msgstr ""
+
+#: QuadStick.py:959
+msgid ""
+"Enables the ViGEmBus DS4 virtual controller.  Allows playing PC games that "
+"use the DS4 controller, or Playstation Remote Play"
+msgstr ""
+
+#: QuadStick.py:962
+msgid "Enable HIDHide to hide Quadstick from games"
+msgstr ""
+
+#: QuadStick.py:963
+msgid ""
+"When using an XBox or DS4 virtual controller, this setting prevents games "
+"and other programs from detecting the presence of the Quadstick's controller "
+"interface if they detect activity from older Direct Input controllers."
+msgstr ""
+
+#: QuadStick.py:966
+msgid "QMP settings"
+msgstr ""
+
+#: QuadStick.py:972
+msgid "Language:"
+msgstr ""
+
+#: QuadStick.py:975
+msgid "English"
+msgstr ""
+
+#: QuadStick.py:975
+msgid "German"
+msgstr ""
+
+#: QuadStick.py:976
+msgid "Change the Language of the QMP Program."
+msgstr ""
+
+#: QuadStick.py:980
+msgid "Minimize to tray"
+msgstr ""
+
+#: QuadStick.py:981
+msgid "QMP will minimze to the task bar tray when checked"
+msgstr ""
+
+#: QuadStick.py:984
+msgid "Start QMP minimized"
+msgstr ""
+
+#: QuadStick.py:985
+msgid "Start QMP minimized."
+msgstr ""
+
+#: QuadStick.py:989
+msgid "Firmware"
+msgstr ""
+
+#: QuadStick.py:996
+msgid "Current Firmware"
+msgstr ""
+
+#: QuadStick.py:999
+msgid ""
+"\n"
+"Each time a new version of the QuadStick \n"
+"firmware is built, a build number is \n"
+"assigned to identify that version"
+msgstr ""
+
+#: QuadStick.py:1002
+msgid "Build number:"
+msgstr ""
+
+#: QuadStick.py:1009
+msgid ""
+"\n"
+"\n"
+"During the update process, this program \n"
+"will attempt to backup and restore the \n"
+"game CSV files on the QuadStick."
+msgstr ""
+
+#: QuadStick.py:1015
+msgid "Available firmware"
+msgstr ""
+
+#: QuadStick.py:1021
+msgid ""
+"Download selected Firmware\n"
+"to QuadStick"
+msgstr ""
+
+#: QuadStick.py:1025
+msgid "Voice Control"
+msgstr ""
+
+#: QuadStick.py:1027
+msgid "Voice Command Transcript"
+msgstr ""
+
+#: QuadStick.py:1034
+msgid "Currently active voice commands"
+msgstr ""
+
+#: QuadStick.py:1050
+msgid "Voice Files"
+msgstr ""
+
+#: QuadStick.py:1054
+msgid "In Vocola folder"
+msgstr ""
+
+#: QuadStick.py:1063
+msgid "Edit Voice File"
+msgstr ""
+
+#: QuadStick.py:1066
+msgid "Delete game file from folder"
+msgstr ""
+
+#: QuadStick.py:1067
+msgid ""
+"Removes a game's VCH file from Vocola folder and adjusts VCL scripts to match"
+msgstr ""
+
+#: QuadStick.py:1070
+msgid "Vocola - Voice Command Language Files"
+msgstr ""
+
+#: QuadStick.py:1079
+msgid "Download to Vocola folder"
+msgstr ""
+
+#: QuadStick.py:1080
+msgid ""
+"Download game VCH file from Quadstick.com and included it in voice commands"
+msgstr ""
+
+#: QuadStick.py:1087
+msgid "External Pointers"
+msgstr ""
+
+#: QuadStick.py:1190
+msgid "Settings:"
+msgstr ""
+
+#: QuadStick.py:1193
+msgid "External Pointer Center Dead Zone:"
+msgstr ""
+
+#: QuadStick.py:1197
+msgid "Size of no signal area in center for UltraStik or TrackIR"
+msgstr ""
+
+#: QuadStick.py:1200
+msgid "Mouse Capture Settings:"
+msgstr ""
+
+#: QuadStick.py:1203
+msgid "Off"
+msgstr ""
+
+#: QuadStick.py:1203
+msgid "Position"
+msgstr ""
+
+#: QuadStick.py:1203
+msgid "Motion"
+msgstr ""
+
+#: QuadStick.py:1204
+msgid ""
+"Absolute position is for Project IRIS FPS Interactor.  Motion is for regular "
+"mouse or trackball."
+msgstr ""
+
+#: QuadStick.py:1211
+msgid "Center X:"
+msgstr ""
+
+#: QuadStick.py:1215
+msgid "Set center X to aiming point of Project IRIS FPS Interactor"
+msgstr ""
+
+#: QuadStick.py:1218
+msgid "Center Y:"
+msgstr ""
+
+#: QuadStick.py:1222
+msgid "Set center Y to aiming point of Project IRIS FPS Interactor"
+msgstr ""
+
+#: QuadStick.py:1225
+msgid "Width:"
+msgstr ""
+
+#: QuadStick.py:1229
+msgid "Set to width of Project IRIS FPS Interactor"
+msgstr ""
+
+#: QuadStick.py:1232
+msgid "Height:"
+msgstr ""
+
+#: QuadStick.py:1236
+msgid "Set to height of Project IRIS FPS Interactor"
+msgstr ""
+
+#: QuadStick.py:1242
+msgid "Gain X:"
+msgstr ""
+
+#: QuadStick.py:1246
+msgid "Controls sensitiviy X of mouse. Default is 100%."
+msgstr ""
+
+#: QuadStick.py:1249
+msgid "Gain Y:"
+msgstr ""
+
+#: QuadStick.py:1253
+msgid "Controls sensitiviy Y of mouse. Default is 100%."
+msgstr ""
+
+#: QuadStick.py:1256
+msgid ""
+"Capture Mouse Location\n"
+"Press F10 to turn on and off"
+msgstr ""
+
+#: QuadStick.py:1257
+msgid ""
+"Opens a full screen window to capture mouse and relays info to the QuadStick"
+msgstr ""
+
+#: QuadStick.py:1275
+msgid ""
+"Save\n"
+"Preferences\n"
+"to\n"
+"QuadStick"
+msgstr ""
+
+#: QuadStick.py:1281
+msgid ""
+"Reload\n"
+"Preferences\n"
+"from\n"
+"QuadStick"
+msgstr ""
+
+#: QuadStick.py:2454
+msgid "QuadStick "
+msgstr ""

@@ -33,6 +33,7 @@
 # add voice commands as sheet in config file instead of separate file
 # color code company config files vs user
 # move back from S3 to google drive for version.ini and firmware
+# add language system by DomePlaysHD
 
 import time
 from time import sleep
@@ -452,10 +453,10 @@ class UserGoogleDriveFolder(wx.Dialog):
         sizer_35 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_34.Add(sizer_35, 1, wx.EXPAND, 0)
 
-        self.button_5 = wx.Button(self, wx.ID_OK, "")
+        self.button_5 = wx.Button(self, wx.ID_OK, _("OK"))
         sizer_35.Add(self.button_5, 1, wx.EXPAND, 0)
 
-        self.button_4 = wx.Button(self, wx.ID_CANCEL, "")
+        self.button_4 = wx.Button(self, wx.ID_CANCEL, _("Cancel"))
         sizer_35.Add(self.button_4, 1, wx.EXPAND, 0)
 
         self.SetSizer(sizer_33)
@@ -547,7 +548,7 @@ class UnableToSave(wx.Dialog):
         self.label_6.SetFont(wx.Font(16, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, ""))
         sizer_21.Add(self.label_6, 4, 0, 0)
 
-        self.button_3 = wx.Button(self, wx.ID_CLOSE, "")
+        self.button_3 = wx.Button(self, wx.ID_CLOSE, _("Close"))
         self.button_3.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, ""))
         sizer_21.Add(self.button_3, 1, 0, 0)
 
@@ -564,10 +565,11 @@ class UnableToSave(wx.Dialog):
         event.Skip()
 
 # end of class UnableToSave
+
 class QuadStickPreferences(wx.Frame):
     def __init__(self, *args, **kwds):
         # over write wx.Gauge widget with a modified version of PyGauge from the AGW library
-        wx.Gauge = QSGauge 
+        wx.Gauge = QSGauge
         # begin wxGlade: QuadStickPreferences.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -587,7 +589,8 @@ class QuadStickPreferences(wx.Frame):
 
         sizer_22 = wx.BoxSizer(wx.HORIZONTAL)
 
-        sizer_23 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("In QuadStick")), wx.VERTICAL)
+        self.box_quadstick_flash = wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("In QuadStick"))
+        sizer_23 = wx.StaticBoxSizer(self.box_quadstick_flash, wx.VERTICAL)
         sizer_22.Add(sizer_23, 2, wx.EXPAND, 0)
 
         self.list_box_csv_files = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
@@ -618,7 +621,8 @@ class QuadStickPreferences(wx.Frame):
         self.panel_18 = wx.Panel(self.notebook_game_files, wx.ID_ANY)
         sizer_63.Add(self.panel_18, 1, wx.EXPAND, 0)
 
-        sizer_3 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("Quadstick Factory profiles")), wx.VERTICAL)
+        self.box_factory_profiles = wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("Quadstick Factory profiles"))
+        sizer_3 = wx.StaticBoxSizer(self.box_factory_profiles, wx.VERTICAL)
         sizer_22.Add(sizer_3, 2, wx.EXPAND, 0)
 
         self.online_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
@@ -636,7 +640,8 @@ class QuadStickPreferences(wx.Frame):
         self.button_download_csv.SetToolTip(_("Download a game's custom CSV file into the QuadStick"))
         sizer_49.Add(self.button_download_csv, 1, wx.EXPAND, 0)
 
-        sizer_8 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom profiles")), wx.VERTICAL)
+        self.custom_profiles_box = wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom profiles"))
+        sizer_8 = wx.StaticBoxSizer(self.custom_profiles_box, wx.VERTICAL)
         sizer_22.Add(sizer_8, 2, wx.EXPAND, 0)
 
         self.user_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
@@ -661,8 +666,8 @@ class QuadStickPreferences(wx.Frame):
 
         grid_sizer_1 = wx.GridSizer(3, 4, 2, 2)
 
-        self.label_1 = wx.StaticText(self.notebook_joystick, wx.ID_ANY, _("Sets Joystick physical range of motion.\n\nLarger numbers make the \njoystick less sensitive.\n\nClick Save preferences \nafter making adjustments."))
-        grid_sizer_1.Add(self.label_1, 0, wx.ALIGN_CENTER, 0)
+        self.label_joystick_info = wx.StaticText(self.notebook_joystick, wx.ID_ANY, _("Sets Joystick physical range of motion.\n\nLarger numbers make the \njoystick less sensitive.\n\nClick Save preferences \nafter making adjustments."), (100, -1), (220, 140))
+        grid_sizer_1.Add(self.label_joystick_info, 0, wx.ALIGN_CENTER, 0)
 
         self.slider_UP = wx.Slider(self.notebook_joystick, wx.ID_ANY, 18, 10, 50, style=wx.SL_AUTOTICKS | wx.SL_INVERSE | wx.SL_LABELS | wx.SL_VERTICAL)
         self.slider_UP.SetToolTip(_("Joystick UP movement"))
@@ -700,7 +705,8 @@ class QuadStickPreferences(wx.Frame):
         self.panel_6 = wx.Panel(self.notebook_joystick, wx.ID_ANY)
         grid_sizer_1.Add(self.panel_6, 1, wx.EXPAND, 0)
 
-        sizer_54 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_joystick, wx.ID_ANY, _("Calculated joystick preference values:")), wx.HORIZONTAL)
+        self.box_joystick_preference = wx.StaticBox(self.notebook_joystick, wx.ID_ANY, _("Calculated joystick preference values:"))
+        sizer_54 = wx.StaticBoxSizer(self.box_joystick_preference, wx.HORIZONTAL)
         grid_sizer_1.Add(sizer_54, 1, wx.ALL | wx.EXPAND, 1)
 
         self.joystick_preference_grid = wx.grid.Grid(self.notebook_joystick, wx.ID_ANY, size=(1, 1))
@@ -720,7 +726,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_12_copy_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_16.Add(sizer_12_copy_1, 1, wx.EXPAND, 0)
 
-        sizer_6 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Mouse speed:")), wx.HORIZONTAL)
+        self.box_mouse_speed = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Mouse speed:"))
+        sizer_6 = wx.StaticBoxSizer(self.box_mouse_speed, wx.HORIZONTAL)
         sizer_12_copy_1.Add(sizer_6, 1, wx.EXPAND, 0)
 
         self.panel_13_copy_1 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -730,7 +737,8 @@ class QuadStickPreferences(wx.Frame):
         self.slider_mouse_speed.SetToolTip(_("Mouse speed relative to joystick movement"))
         sizer_6.Add(self.slider_mouse_speed, 2, wx.EXPAND, 0)
 
-        sizer_7 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff Max pressure")), wx.HORIZONTAL)
+        self.box_SP_max = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff Max pressure"))
+        sizer_7 = wx.StaticBoxSizer(self.box_SP_max, wx.HORIZONTAL)
         sizer_12_copy_1.Add(sizer_7, 1, wx.EXPAND, 0)
 
         self.panel_9_copy = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -743,7 +751,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_12_copy_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_16.Add(sizer_12_copy_2, 1, wx.EXPAND, 0)
 
-        sizer_21 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Brightness")), wx.HORIZONTAL)
+        self.box_brightness = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Brightness"))
+        sizer_21 = wx.StaticBoxSizer(self.box_brightness, wx.HORIZONTAL)
         sizer_12_copy_2.Add(sizer_21, 1, wx.EXPAND, 0)
 
         self.panel_13_copy_2 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -753,7 +762,8 @@ class QuadStickPreferences(wx.Frame):
         self.slider_brightness.SetToolTip(_("LED brightness"))
         sizer_21.Add(self.slider_brightness, 2, wx.EXPAND, 0)
 
-        sizer_32 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff High threshold")), wx.HORIZONTAL)
+        self.box_SP_high = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff High threshold"))
+        sizer_32 = wx.StaticBoxSizer(self.box_SP_high, wx.HORIZONTAL)
         sizer_12_copy_2.Add(sizer_32, 1, wx.EXPAND, 0)
 
         self.panel_9 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -766,7 +776,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_12_copy_3 = wx.BoxSizer(wx.VERTICAL)
         sizer_16.Add(sizer_12_copy_3, 1, wx.EXPAND, 0)
 
-        sizer_33 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Volume")), wx.HORIZONTAL)
+        self.box_volume = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Volume"))
+        sizer_33 = wx.StaticBoxSizer(self.box_volume, wx.HORIZONTAL)
         sizer_12_copy_3.Add(sizer_33, 1, wx.EXPAND, 0)
 
         self.panel_13_copy_3 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -776,7 +787,8 @@ class QuadStickPreferences(wx.Frame):
         self.slider_volume.SetToolTip(_("Speaker volume"))
         sizer_33.Add(self.slider_volume, 2, wx.EXPAND, 0)
 
-        sizer_34 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff Low threshold")), wx.HORIZONTAL)
+        self.box_SP_low = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff Low threshold"))
+        sizer_34 = wx.StaticBoxSizer(self.box_SP_low, wx.HORIZONTAL)
         sizer_12_copy_3.Add(sizer_34, 1, wx.EXPAND, 0)
 
         self.panel_10 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -789,7 +801,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_35 = wx.BoxSizer(wx.VERTICAL)
         sizer_16.Add(sizer_35, 1, wx.EXPAND, 0)
 
-        sizer_37 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("D-Pad outer ring")), wx.HORIZONTAL)
+        self.box_D_Pad_outer_ring = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("D-Pad outer ring"))
+        sizer_37 = wx.StaticBoxSizer(self.box_D_Pad_outer_ring, wx.HORIZONTAL)
         sizer_35.Add(sizer_37, 1, wx.EXPAND, 0)
 
         self.panel_13 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -799,7 +812,8 @@ class QuadStickPreferences(wx.Frame):
         self.slider_D_Pad_outer_ring.SetToolTip(_("Percent joystick deflection to active D-Pad"))
         sizer_37.Add(self.slider_D_Pad_outer_ring, 2, wx.EXPAND, 0)
 
-        sizer_56 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Lip maximum")), wx.HORIZONTAL)
+        self.box_Lip_max = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Lip maximum"))
+        sizer_56 = wx.StaticBoxSizer(self.box_Lip_max, wx.HORIZONTAL)
         sizer_35.Add(sizer_56, 1, wx.EXPAND, 0)
 
         self.panel_13_copy = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -812,7 +826,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_36 = wx.BoxSizer(wx.VERTICAL)
         sizer_16.Add(sizer_36, 1, wx.EXPAND, 0)
 
-        sizer_55 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("D-Pad inner ring")), wx.HORIZONTAL)
+        self.box_D_Pad_inner_ring = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("D-Pad inner ring"))
+        sizer_55 = wx.StaticBoxSizer(self.box_D_Pad_inner_ring, wx.HORIZONTAL)
         sizer_36.Add(sizer_55, 1, wx.EXPAND, 0)
 
         self.panel_14 = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -822,7 +837,8 @@ class QuadStickPreferences(wx.Frame):
         self.slider_D_Pad_inner_ring.SetToolTip(_("Percent joystick deflection to active inner D-Pad after delay"))
         sizer_55.Add(self.slider_D_Pad_inner_ring, 2, wx.EXPAND, 0)
 
-        sizer_64 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Lip minimum")), wx.HORIZONTAL)
+        self.box_Lip_min = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Lip minimum"))
+        sizer_64 = wx.StaticBoxSizer(self.box_Lip_min, wx.HORIZONTAL)
         sizer_36.Add(sizer_64, 1, wx.EXPAND, 0)
 
         self.panel_14_copy = wx.Panel(self.notebook_misc, wx.ID_ANY)
@@ -838,7 +854,8 @@ class QuadStickPreferences(wx.Frame):
         sizer_18 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_17.Add(sizer_18, 1, wx.EXPAND, 0)
 
-        sizer_19 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Digital Outputs")), wx.VERTICAL)
+        self.box_do = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Digital Outputs"))
+        sizer_19 = wx.StaticBoxSizer(self.box_do, wx.VERTICAL)
         sizer_18.Add(sizer_19, 1, wx.EXPAND, 0)
 
         self.checkbox_do_1 = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Digital output 1"))
@@ -849,7 +866,8 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox_do_2.SetToolTip(_("Controls default Digital Output 2 on/off state"))
         sizer_19.Add(self.checkbox_do_2, 0, 0, 0)
 
-        sizer_65 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Mouse")), wx.VERTICAL)
+        self.box_mouse = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Mouse"))
+        sizer_65 = wx.StaticBoxSizer(self.box_mouse, wx.VERTICAL)
         sizer_18.Add(sizer_65, 1, wx.EXPAND, 0)
 
         self.checkbox_circular_deadzone = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Enable Circular Dead Zone"))
@@ -860,30 +878,31 @@ class QuadStickPreferences(wx.Frame):
         sizer_38 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_65.Add(sizer_38, 0, wx.EXPAND, 0)
 
-        self.label_10 = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Mouse Response Curve: "))
-        self.label_10.SetToolTip(_("Selects how the joystick position is converted to mouse movement"))
-        sizer_38.Add(self.label_10, 0, 0, 0)
+        self.label_mouse_response = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Mouse Response Curve: "))
+        self.label_mouse_response.SetToolTip(_("Selects how the joystick position is converted to mouse movement"))
+        sizer_38.Add(self.label_mouse_response, 0, 0, 0)
 
         self.choice_mouse_response = wx.Choice(self.notebook_misc, wx.ID_ANY, choices=[_("Linear"), _("Mixed"), _("Parabolic")])
         self.choice_mouse_response.SetSelection(0)
         sizer_38.Add(self.choice_mouse_response, 0, 0, 0)
 
-        sizer_20 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Bluetooth:")), wx.HORIZONTAL)
+        self.box_BT = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Bluetooth:"))
+        sizer_20 = wx.StaticBoxSizer(self.box_BT, wx.HORIZONTAL)
         sizer_17.Add(sizer_20, 1, wx.EXPAND, 0)
 
         grid_sizer_3 = wx.FlexGridSizer(2, 2, 1, 5)
         sizer_20.Add(grid_sizer_3, 2, wx.EXPAND, 0)
 
-        self.label_2 = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Device:"), style=wx.ALIGN_RIGHT)
-        grid_sizer_3.Add(self.label_2, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
+        self.label_device = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Device:"), style=wx.ALIGN_RIGHT)
+        grid_sizer_3.Add(self.label_device, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
 
         self.choice_BT_device_mode = wx.Choice(self.notebook_misc, wx.ID_ANY, choices=[_("none"), _("keyboard"), _("game_pad"), _("mouse"), _("combo"), _("joystick"), _("ssp")])
         self.choice_BT_device_mode.SetToolTip(_("Device mode.  Controls what kind of device QuadStick is for Bluetooth function"))
         self.choice_BT_device_mode.SetSelection(0)
         grid_sizer_3.Add(self.choice_BT_device_mode, 0, wx.EXPAND, 0)
 
-        self.label_3 = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Auth:"), style=wx.ALIGN_RIGHT)
-        grid_sizer_3.Add(self.label_3, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
+        self.label_auth = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Auth:"), style=wx.ALIGN_RIGHT)
+        grid_sizer_3.Add(self.label_auth, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
 
         self.choice_BT_auth_mode = wx.Choice(self.notebook_misc, wx.ID_ANY, choices=[_("0"), _("1"), _("2"), _("4")])
         self.choice_BT_auth_mode.SetToolTip(_("Authentication mode.  Default: 4"))
@@ -894,7 +913,8 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox_enable_serial_port.SetToolTip(_("Allows external pointer and file commands over Bluetooth or serial port when QuadStick is not plugged in to the PC"))
         sizer_20.Add(self.checkbox_enable_serial_port, 2, 0, 0)
 
-        sizer_67 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff misc")), wx.VERTICAL)
+        self.box_SP_misc = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Sip/Puff misc"))
+        sizer_67 = wx.StaticBoxSizer(self.box_SP_misc, wx.VERTICAL)
         sizer_17.Add(sizer_67, 1, wx.EXPAND, 0)
 
         self.checkbox_select_files = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Enable select file with side tube"))
@@ -909,21 +929,22 @@ class QuadStickPreferences(wx.Frame):
         grid_sizer_2 = wx.GridSizer(2, 2, 1, 4)
         sizer_67.Add(grid_sizer_2, 1, 0, 0)
 
-        label_4 = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Low threshold delay:   "))
-        grid_sizer_2.Add(label_4, 1, wx.ALIGN_CENTER, 0)
+        self.label_SP_low_delay = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Low threshold delay:"))
+        grid_sizer_2.Add(self.label_SP_low_delay, 1, wx.ALIGN_LEFT, 10)
 
         self.spin_ctrl_SP_low_delay = wx.SpinCtrl(self.notebook_misc, wx.ID_ANY, "1200", min=100, max=3000, style=0)
         self.spin_ctrl_SP_low_delay.SetToolTip(_("Low (or Soft) Sip/Puff signals are sensed after a short delay"))
         grid_sizer_2.Add(self.spin_ctrl_SP_low_delay, 1, wx.ALIGN_CENTER, 0)
 
-        label_5 = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("High threshold delay:  "))
-        grid_sizer_2.Add(label_5, 1, wx.ALIGN_CENTER, 0)
+        self.label_SP_high_delay = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("High threshold delay:"))
+        grid_sizer_2.Add(self.label_SP_high_delay, 1, wx.ALIGN_LEFT, 10)
 
         self.spin_ctrl_SP_high_delay = wx.SpinCtrl(self.notebook_misc, wx.ID_ANY, "2000", min=1000, max=3000, style=0)
         self.spin_ctrl_SP_high_delay.SetToolTip(_("Long high threshold Sip/Puffs can "))
         grid_sizer_2.Add(self.spin_ctrl_SP_high_delay, 1, wx.ALIGN_CENTER, 0)
 
-        sizer_66 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("USB settings")), wx.VERTICAL)
+        self.box_usb_settings = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("USB settings"))
+        sizer_66 = wx.StaticBoxSizer(self.box_usb_settings, wx.VERTICAL)
         sizer_17.Add(sizer_66, 1, wx.EXPAND, 0)
 
         self.checkbox_ps4_boot_mode = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Enable boot in PS4 USB mode"))
@@ -942,7 +963,8 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox_usb_A_host_mode.SetToolTip(_("Must be on to support DS4, UltraStik, or other devices connected to the USB-A port."))
         sizer_66.Add(self.checkbox_usb_A_host_mode, 0, 0, 0)
 
-        sizer_68 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Virtual gamepad emulator")), wx.VERTICAL)
+        self.box_vg = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("Virtual gamepad emulator"))
+        sizer_68 = wx.StaticBoxSizer(self.box_vg, wx.VERTICAL)
         sizer_17.Add(sizer_68, 1, wx.EXPAND, 0)
 
         self.checkbox_enable_vg_X360 = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Enable virtual XBox controller emulation"))
@@ -957,8 +979,20 @@ class QuadStickPreferences(wx.Frame):
         self.checkbox__enable_HIDHide.SetToolTip(_("When using an XBox or DS4 virtual controller, this setting prevents games and other programs from detecting the presence of the Quadstick's controller interface if they detect activity from older Direct Input controllers."))
         sizer_68.Add(self.checkbox__enable_HIDHide, 0, 0, 0)
 
-        sizer_1 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("QMP settings")), wx.VERTICAL)
+        self.box_qmp_settings = wx.StaticBox(self.notebook_misc, wx.ID_ANY, _("QMP settings"))
+        sizer_1 = wx.StaticBoxSizer(self.box_qmp_settings, wx.VERTICAL)
         sizer_17.Add(sizer_1, 1, wx.EXPAND, 0)
+        
+        grid_sizer_locale = wx.FlexGridSizer(1, 2, 1, 5)
+        sizer_1.Add(grid_sizer_locale, 2, wx.EXPAND, 0)
+        
+        self.label_locale = wx.StaticText(self.notebook_misc, wx.ID_ANY, _("Language:"), style=wx.ALIGN_RIGHT)
+        grid_sizer_locale.Add(self.label_locale, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
+
+        self.choice_locale = wx.Choice(self.notebook_misc, wx.ID_ANY, choices=[_("English"), _("German")])
+        self.choice_locale.SetToolTip(_("Change the Language of the QMP Program."))
+        self.choice_locale.SetSelection(0)
+        grid_sizer_locale.Add(self.choice_locale, 0, wx.EXPAND, 0)
 
         self.checkbox_minimize_to_tray = wx.CheckBox(self.notebook_misc, wx.ID_ANY, _("Minimize to tray"))
         self.checkbox_minimize_to_tray.SetToolTip(_("QMP will minimze to the task bar tray when checked"))
@@ -976,26 +1010,29 @@ class QuadStickPreferences(wx.Frame):
         sizer_28 = wx.BoxSizer(wx.VERTICAL)
         sizer_26.Add(sizer_28, 1, wx.EXPAND, 0)
 
-        sizer_29 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Current Firmware")), wx.VERTICAL)
+        self.box_current_firmware = wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Current Firmware"))
+        sizer_29 = wx.StaticBoxSizer(self.box_current_firmware, wx.VERTICAL)
         sizer_28.Add(sizer_29, 2, wx.EXPAND, 0)
 
-        self.label_7 = wx.StaticText(self.notebook_firmware, wx.ID_ANY, _("\nEach time a new version of the QuadStick \nfirmware is built, a build number is \nassigned to identify that version"), style=wx.ALIGN_CENTER_HORIZONTAL)
-        sizer_29.Add(self.label_7, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        self.label_new_version = wx.StaticText(self.notebook_firmware, wx.ID_ANY, _("\nEach time a new version of the QuadStick \nfirmware is built, a build number is \nassigned to identify that version"), style=wx.ALIGN_CENTER_HORIZONTAL)
+        sizer_29.Add(self.label_new_version, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
 
-        sizer_30 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Build number:")), wx.HORIZONTAL)
+        self.box_build_number = wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Build number:"))
+        sizer_30 = wx.StaticBoxSizer(self.box_build_number, wx.HORIZONTAL)
         sizer_29.Add(sizer_30, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
 
-        self.build_number_text = wx.TextCtrl(self.notebook_firmware, wx.ID_ANY, _("000"), style=wx.TE_CENTRE | wx.TE_READONLY)
+        self.build_number_text = wx.TextCtrl(self.notebook_firmware, wx.ID_ANY, "000", style=wx.TE_CENTRE | wx.TE_READONLY)
         self.build_number_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, ""))
         sizer_30.Add(self.build_number_text, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        self.label_8 = wx.StaticText(self.notebook_firmware, wx.ID_ANY, _("\n\nDuring the update process, this program \nwill attempt to backup and restore the \ngame CSV files on the QuadStick."), style=wx.ALIGN_CENTER_HORIZONTAL)
-        sizer_29.Add(self.label_8, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
+        self.label_firmware_update = wx.StaticText(self.notebook_firmware, wx.ID_ANY, _("\n\nDuring the update process, this program \nwill attempt to backup and restore the \ngame CSV files on the QuadStick."), style=wx.ALIGN_CENTER_HORIZONTAL)
+        sizer_29.Add(self.label_firmware_update, 1, wx.ALIGN_CENTER_HORIZONTAL, 0)
 
         self.panel_1 = wx.Panel(self.notebook_firmware, wx.ID_ANY)
         sizer_28.Add(self.panel_1, 1, wx.EXPAND, 0)
 
-        sizer_27 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Available firmware")), wx.VERTICAL)
+        self.box_available_firmware = wx.StaticBox(self.notebook_firmware, wx.ID_ANY, _("Available firmware"))
+        sizer_27 = wx.StaticBoxSizer(self.box_available_firmware, wx.VERTICAL)
         sizer_26.Add(sizer_27, 1, wx.EXPAND, 0)
 
         self.list_ctrl_firmware = wx.ListCtrl(self.notebook_firmware, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
@@ -1007,7 +1044,8 @@ class QuadStickPreferences(wx.Frame):
         self.notebook_pane_transcript = wx.Panel(self.notebook, wx.ID_ANY)
         self.notebook.AddPage(self.notebook_pane_transcript, _("Voice Control"))
 
-        sizer_4 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_pane_transcript, wx.ID_ANY, _("Voice Command Transcript")), wx.HORIZONTAL)
+        self.voice_cmd_transcript_box = wx.StaticBox(self.notebook_pane_transcript, wx.ID_ANY, _("Voice Command Transcript"))
+        sizer_4 = wx.StaticBoxSizer(self.voice_cmd_transcript_box, wx.HORIZONTAL)
 
         self.voice_transcript = wx.TextCtrl(self.notebook_pane_transcript, wx.ID_ANY, "", style=wx.TE_CHARWRAP | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER | wx.TE_WORDWRAP)
         self.voice_transcript.SetFocus()
@@ -1034,7 +1072,8 @@ class QuadStickPreferences(wx.Frame):
 
         sizer_22_copy = wx.BoxSizer(wx.HORIZONTAL)
 
-        sizer_23_copy = wx.StaticBoxSizer(wx.StaticBox(self.notebook_voice_files, wx.ID_ANY, _("In Vocola folder")), wx.VERTICAL)
+        self.box_voice_files = wx.StaticBox(self.notebook_voice_files, wx.ID_ANY, _("In Vocola folder"))
+        sizer_23_copy = wx.StaticBoxSizer(self.box_voice_files, wx.VERTICAL)
         sizer_22_copy.Add(sizer_23_copy, 1, wx.EXPAND, 0)
 
         self.list_box_voice_files = wx.ListBox(self.notebook_voice_files, wx.ID_ANY, choices=[], style=wx.LB_EXTENDED)
@@ -1046,11 +1085,12 @@ class QuadStickPreferences(wx.Frame):
         self.button_edit_voice_file = wx.Button(self.notebook_voice_files, wx.ID_ANY, _("Edit Voice File"))
         sizer_51.Add(self.button_edit_voice_file, 1, wx.EXPAND, 0)
 
-        self.button_6_copy = wx.Button(self.notebook_voice_files, wx.ID_ANY, _("Delete game file from folder"))
-        self.button_6_copy.SetToolTip(_("Removes a game's VCH file from Vocola folder and adjusts VCL scripts to match"))
-        sizer_51.Add(self.button_6_copy, 1, wx.EXPAND, 0)
+        self.button_delete_voice_file = wx.Button(self.notebook_voice_files, wx.ID_ANY, _("Delete game file from folder"))
+        self.button_delete_voice_file.SetToolTip(_("Removes a game's VCH file from Vocola folder and adjusts VCL scripts to match"))
+        sizer_51.Add(self.button_delete_voice_file, 1, wx.EXPAND, 0)
 
-        sizer_24_copy = wx.StaticBoxSizer(wx.StaticBox(self.notebook_voice_files, wx.ID_ANY, _("Vocola - Voice Command Language Files")), wx.VERTICAL)
+        self.box_voice_cmd_files = wx.StaticBox(self.notebook_voice_files, wx.ID_ANY, _("Vocola - Voice Command Language Files"))
+        sizer_24_copy = wx.StaticBoxSizer(self.box_voice_cmd_files, wx.VERTICAL)
         sizer_22_copy.Add(sizer_24_copy, 2, wx.EXPAND, 0)
 
         self.online_voice_files_list = wx.ListCtrl(self.notebook_voice_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
@@ -1170,17 +1210,20 @@ class QuadStickPreferences(wx.Frame):
         self.panel_43_copy = wx.Panel(self.notebook_external_pointers, wx.ID_ANY)
         sizer_45_copy.Add(self.panel_43_copy, 5, wx.EXPAND, 0)
 
-        sizer_46 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Settings:")), wx.VERTICAL)
+        self.box_external_pointers_settings = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Settings:"))
+        sizer_46 = wx.StaticBoxSizer(self.box_external_pointers_settings, wx.VERTICAL)
         sizer_41.Add(sizer_46, 1, 0, 0)
 
-        sizer_47 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("External Pointer Center Dead Zone:")), wx.VERTICAL)
+        self.box_external_pointers_dead_zone = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("External Pointer Center Dead Zone:"))
+        sizer_47 = wx.StaticBoxSizer(self.box_external_pointers_dead_zone, wx.VERTICAL)
         sizer_46.Add(sizer_47, 0, wx.EXPAND, 0)
 
         self.TIR_DeadZone = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=100, style=0)
         self.TIR_DeadZone.SetToolTip(_("Size of no signal area in center for UltraStik or TrackIR"))
         sizer_47.Add(self.TIR_DeadZone, 1, 0, 0)
 
-        mouse_capture_settings = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Mouse Capture Settings:")), wx.VERTICAL)
+        self.box_mouse_capture_settings = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Mouse Capture Settings:"))
+        mouse_capture_settings = wx.StaticBoxSizer(self.box_mouse_capture_settings, wx.VERTICAL)
         sizer_46.Add(mouse_capture_settings, 2, wx.EXPAND, 0)
 
         self.capture_mode = wx.Choice(self.notebook_external_pointers, wx.ID_ANY, choices=[_("Off"), _("Position"), _("Motion")])
@@ -1191,49 +1234,55 @@ class QuadStickPreferences(wx.Frame):
         position_settings = wx.GridSizer(2, 2, 0, 0)
         mouse_capture_settings.Add(position_settings, 4, wx.EXPAND, 0)
 
-        sizer_58 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Center X:")), wx.HORIZONTAL)
+        self.box_mouse_capture_center_x = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Center X:"))
+        sizer_58 = wx.StaticBoxSizer(self.box_mouse_capture_center_x, wx.HORIZONTAL)
         position_settings.Add(sizer_58, 1, wx.EXPAND, 0)
 
         self.center_x = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=10000, style=0)
-        self.center_x.SetToolTip(_("Set center X,Y to aiming point of Project IRIS FPS Interactor"))
+        self.center_x.SetToolTip(_("Set center X to aiming point of Project IRIS FPS Interactor"))
         sizer_58.Add(self.center_x, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        sizer_57 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Center Y:")), wx.HORIZONTAL)
+        self.box_mouse_capture_center_y = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Center Y:"))
+        sizer_57 = wx.StaticBoxSizer(self.box_mouse_capture_center_y, wx.HORIZONTAL)
         position_settings.Add(sizer_57, 1, wx.EXPAND, 0)
 
         self.center_y = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=10000, style=0)
-        self.center_y.SetToolTip(_("Set center X,Y to aiming point of Project IRIS FPS Interactor"))
+        self.center_y.SetToolTip(_("Set center Y to aiming point of Project IRIS FPS Interactor"))
         sizer_57.Add(self.center_y, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        sizer_59 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Width:")), wx.HORIZONTAL)
+        self.box_mouse_capture_width = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Width:"))
+        sizer_59 = wx.StaticBoxSizer(self.box_mouse_capture_width, wx.HORIZONTAL)
         position_settings.Add(sizer_59, 1, wx.EXPAND, 0)
 
         self.position_width = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=10000, style=0)
         self.position_width.SetToolTip(_("Set to width of Project IRIS FPS Interactor"))
         sizer_59.Add(self.position_width, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        sizer_60 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Height:")), wx.HORIZONTAL)
+        self.box_mouse_capture_height = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Height:"))
+        sizer_60 = wx.StaticBoxSizer(self.box_mouse_capture_height, wx.HORIZONTAL)
         position_settings.Add(sizer_60, 1, wx.EXPAND, 0)
 
         self.position_height = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=10000, style=0)
-        self.position_height.SetToolTip(_("Set to width of Project IRIS FPS Interactor"))
+        self.position_height.SetToolTip(_("Set to height of Project IRIS FPS Interactor"))
         sizer_60.Add(self.position_height, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
         movement_settings = wx.GridSizer(1, 2, 0, 0)
         mouse_capture_settings.Add(movement_settings, 2, wx.EXPAND, 0)
 
-        sizer_61 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Gain X:")), wx.HORIZONTAL)
+        self.box_mouse_capture_gain_x = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Gain X:"))
+        sizer_61 = wx.StaticBoxSizer(self.box_mouse_capture_gain_x, wx.HORIZONTAL)
         movement_settings.Add(sizer_61, 1, wx.EXPAND, 0)
 
         self.gain_x = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=1000, style=0)
-        self.gain_x.SetToolTip(_("Controls sensitiviy of mouse. Default is 100%."))
+        self.gain_x.SetToolTip(_("Controls sensitiviy X of mouse. Default is 100%."))
         sizer_61.Add(self.gain_x, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
-        sizer_62 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Gain Y:")), wx.HORIZONTAL)
+        self.box_mouse_capture_gain_y = wx.StaticBox(self.notebook_external_pointers, wx.ID_ANY, _("Gain Y:"))
+        sizer_62 = wx.StaticBoxSizer(self.box_mouse_capture_gain_y, wx.HORIZONTAL)
         movement_settings.Add(sizer_62, 1, wx.EXPAND, 0)
 
         self.gain_y = wx.SpinCtrl(self.notebook_external_pointers, wx.ID_ANY, "", min=0, max=1000, style=0)
-        self.gain_y.SetToolTip(_("Controls sensitiviy of mouse. Default is 100%."))
+        self.gain_y.SetToolTip(_("Controls sensitiviy Y of mouse. Default is 100%."))
         sizer_62.Add(self.gain_y, 0, wx.ALIGN_CENTER_VERTICAL, 0)
 
         self.StartMouseCapture = wx.Button(self.notebook_external_pointers, wx.ID_ANY, _("Capture Mouse Location\nPress F10 to turn on and off"))
@@ -1255,10 +1304,10 @@ class QuadStickPreferences(wx.Frame):
         self.text_ctrl_messages = wx.TextCtrl(self.message_pane_panel, wx.ID_ANY, "", style=wx.TE_CHARWRAP | wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_WORDWRAP)
         sizer_5.Add(self.text_ctrl_messages, 5, wx.EXPAND, 0)
 
-        self.button_save = wx.Button(self, wx.ID_ANY, _("&Save\nPreferences\nto\nQuadStick"))
+        self.button_save = wx.Button(self, wx.ID_ANY, _("Save\nPreferences\nto\nQuadStick"))
         message_pane_sizer.Add(self.button_save, 1, wx.EXPAND, 0)
 
-        self.button_cancel = wx.Button(self, wx.ID_CLOSE, "")
+        self.button_cancel = wx.Button(self, wx.ID_CLOSE, _("Close"))
         message_pane_sizer.Add(self.button_cancel, 1, wx.EXPAND, 0)
 
         self.button_reload = wx.Button(self, wx.ID_ANY, _("Reload\nPreferences\nfrom\nQuadStick"))
@@ -1324,7 +1373,7 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_TEXT_ENTER, self.onMessagePaneEnter, self.voice_transcript)
         self.Bind(wx.EVT_LISTBOX_DCLICK, self.DeleteFromVocolaEvent, self.list_box_voice_files)
         self.Bind(wx.EVT_BUTTON, self.OnEditVoiceFile, self.button_edit_voice_file)
-        self.Bind(wx.EVT_BUTTON, self.DeleteFromVocolaEvent, self.button_6_copy)
+        self.Bind(wx.EVT_BUTTON, self.DeleteFromVocolaEvent, self.button_delete_voice_file)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.DownloadVoiceFileEvent, self.online_voice_files_list)
         self.Bind(wx.EVT_BUTTON, self.DownloadToVocolaEvent, self.button_download_voice_file)
         self.Bind(wx.EVT_SPINCTRL, self.TIR_DeadZoneEvent, self.TIR_DeadZone)
@@ -1339,6 +1388,7 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.SavePreferences, self.button_save)
         self.Bind(wx.EVT_BUTTON, self.CancelAndClose, self.button_cancel)
         self.Bind(wx.EVT_BUTTON, self.ReloadFromQuadstick, self.button_reload)
+        self.Bind(wx.EVT_CHOICE, self.ChangeLocale, self.choice_locale)
         # end wxGlade
         self.Bind(wx.EVT_CLOSE, self.CloseEvent, self)
         self.tbIcon = CustomTaskBarIcon(self)
@@ -1358,7 +1408,7 @@ class QuadStickPreferences(wx.Frame):
         # factory vs user game list, last active list
         self._last_game_list_selected = None # self.online_game_files_list
         # self.on_timer()
-        
+
     def on_timer(self):  # grabs the mouse location and relays it to the quadstick
         dx, dy = wx.GetDisplaySize()
         #print "display size: ", dx, dy
@@ -1386,15 +1436,15 @@ class QuadStickPreferences(wx.Frame):
             slider.SetValue(new_value)
         if diff == 0: return
         links = self.radio_box_slider_linking.GetStringSelection()
-        if links == 'all':
+        if links == _('all'):
             for s in all:
                 s._qs_value = min((max((s.GetValue() + diff, self.slider_NEUTRAL.GetValue() + 5,)), 100,))
                 s.SetValue(s._qs_value)
-        if links == 'vertical':
+        if links == _('vertical'):
             for s in vertical:
                 s._qs_value = min((max((s.GetValue() + diff, self.slider_NEUTRAL.GetValue() + 5,)), 100,))
                 s.SetValue(s._qs_value)
-        if links == 'horizontal':
+        if links == _('horizontal'):
             for s in horizontal:
                 s._qs_value = min((max((s.GetValue() + diff, self.slider_NEUTRAL.GetValue() + 5,)), 100,))
                 s.SetValue(s._qs_value)
@@ -1842,6 +1892,14 @@ class QuadStickPreferences(wx.Frame):
         # init virtual gamebus settings
         self.checkbox_enable_vg_DS4.SetValue(settings.get('enable_VG4', False))
         self.checkbox_enable_vg_X360.SetValue(settings.get('enable_VGX', False))
+
+        # set up locale
+        choices = self.choice_locale.GetItems()
+        choice_index = choices.index(self.GetLocaleName(settings.get('current_locale')))
+        self.choice_locale.Select(choice_index)
+
+        self.text_ctrl_messages.AppendText("Set language to: " + self.GetLocale(self.choice_locale.GetStringSelection()) + "\n")
+
         self.checkbox_minimize_to_tray.SetValue(settings.get('minimize_to_tray', False))
         self.checkbox_start_minimized.SetValue(settings.get('start_mimimized', False))
         # init serial connection enable
@@ -1887,6 +1945,263 @@ class QuadStickPreferences(wx.Frame):
 
         check_for_newer_version(self)
         return True #indicate good read
+
+    def GetPanelID(self, panel):
+        for tab_id in range(self.notebook.GetPageCount()):
+            if self.notebook.GetPage(tab_id) == panel:
+                return tab_id
+
+    def UpdatePageAndLabelNames(self):
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_game_files), _("Game Files"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_joystick), _("Joystick"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_misc), _("Misc"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_firmware), _("Firmware"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_pane_transcript), _("Voice Control"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_voice_files), _("Voice Files"))
+        self.notebook.SetPageText(self.GetPanelID(self.notebook_external_pointers), _("External Pointers"))
+
+        # self.SetTitle(_("QuadStick"))
+        self.SetToolTip(_("Change preference settings for QuadStick"))
+
+        self.box_quadstick_flash.SetLabel(_("In QuadStick"))
+        self.list_box_csv_files.SetToolTip(_("Double click to Edit"))
+
+        self.button_load_and_run.SetLabelText(_("Load and Run File\nin QuadStick"))
+        self.button_load_and_run.SetToolTip(_("Requires a USB, Bluetooth or serial connection to the QuadStick"))
+
+        self.print_file_list.SetLabelText(_("Print file list"))
+        self.print_file_list.SetToolTip(_("Opens a browser window with the list of files in the QuadStick"))
+
+        self.button_delete_csv.SetLabelText(_("Remove\nfrom QuadStick"))
+        self.button_delete_csv.SetToolTip(_("Remove the game's profile CSV file from the QuadStick"))
+        
+        self.box_factory_profiles.SetLabel(_("Quadstick Factory profiles"))
+        self.online_game_files_list.SetToolTip(_("Double Click to edit. Drag over to download into to QuadStick flash."))
+
+        self.button_edit_spreadsheet.SetLabelText(_("Open Configuration Spreadsheet"))
+        self.button_edit_spreadsheet.SetToolTip(_("Opens browser on the selected configuration spreadsheet"))
+
+        self.button_download_csv.SetLabelText(_("Download to QuadStick"))
+        self.button_download_csv.SetToolTip(_("Download a game's custom CSV file into the QuadStick"))
+
+        self.custom_profiles_box.SetLabel(_("User Custom profiles"))
+        self.user_game_files_list.SetToolTip(_("Double Click to Edit.  Drag over to download into to QuadStick flash."))
+
+        self.button_add_user_game.SetLabelText(_("Add Game to User List"))
+        self.button_add_user_game.SetToolTip(_("Click button and paste URL for a custom configuration spreadsheet into the dialog box"))
+
+        self.button_remove_user_game.SetLabelText(_("Remove Game from User List"))
+        self.button_remove_user_game.SetToolTip(_("Removes the selected User Custom game from the list."))
+
+        self.label_joystick_info.SetLabelText(_("Sets Joystick physical range of motion.\n\nLarger numbers make the \njoystick less sensitive.\n\nClick Save preferences \nafter making adjustments."))
+        self.slider_UP.SetToolTip(_("Joystick UP movement"))
+
+        self.radio_box_slider_linking.SetLabelText(_("Link Sliders:"))
+        self.radio_box_slider_linking.SetItemLabel(0, _("all"))
+        self.radio_box_slider_linking.SetItemLabel(1, _("horizontal"))
+        self.radio_box_slider_linking.SetItemLabel(2, _("vertical"))
+
+        self.slider_LEFT.SetToolTip(_("Joystick LEFT movement"))
+        self.slider_NEUTRAL.SetToolTip(_("Center dead zone.  Set high enough to prevent wandering mouse or joystick."))
+        self.slider_RIGHT.SetToolTip(_("Joystick RIGHT movement"))
+        self.slider_DOWN.SetToolTip(_("Joystick DOWN movement"))
+
+        self.box_joystick_preference.SetLabelText(_("Calculated joystick preference values:"))
+        self.joystick_preference_grid.SetColLabelValue(0, _("Preference"))
+        self.joystick_preference_grid.SetColLabelValue(1, _("Value"))
+        self.joystick_preference_grid.SetToolTip(_("Preferences File values"))
+
+        self.box_mouse_speed.SetLabelText(_("Mouse speed:"))
+        self.slider_mouse_speed.SetToolTip(_("Mouse speed relative to joystick movement"))
+
+        self.box_SP_max.SetLabelText(_("Sip/Puff Max pressure"))
+        self.slider_SP_max.SetToolTip(_("Maximum pressure to scale to 100% signal"))
+
+        self.box_brightness.SetLabelText(_("Brightness"))
+        self.slider_brightness.SetToolTip(_("LED brightness"))
+
+        self.box_SP_high.SetLabelText(_("Sip/Puff High threshold"))
+        self.slider_SP_high.SetToolTip(_("Pressure at which to trigger output"))
+
+        self.box_volume.SetLabelText(_("Volume"))
+        self.slider_volume.SetToolTip(_("Speaker volume"))
+
+        self.box_SP_low.SetLabelText(_("Sip/Puff Low threshold"))
+        self.slider_SP_low.SetToolTip(_("Low pressure threshold."))
+
+        self.box_D_Pad_outer_ring.SetLabelText(_("D-Pad outer ring"))
+        self.slider_D_Pad_outer_ring.SetToolTip(_("Percent joystick deflection to active D-Pad"))
+
+        self.box_Lip_max.SetLabelText(_("Lip maximum"))
+        self.slider_Lip_max.SetToolTip(_("Percent of lip sensor physical movement to exert full signal"))
+
+        self.box_D_Pad_inner_ring.SetLabelText(_("D-Pad inner ring"))
+        self.slider_D_Pad_inner_ring.SetToolTip(_("Percent joystick deflection to active inner D-Pad after delay"))
+
+        self.box_Lip_min.SetLabelText(_("Lip minimum"))
+        self.slider_Lip_min.SetToolTip(_("Percent lip sensor position to activate signal"))
+
+        self.box_do.SetLabelText(_("Digital Outputs"))
+
+        self.checkbox_do_1.SetLabelText(_("Digital output 1"))
+        self.checkbox_do_1.SetToolTip(_("Controls default Digital Output 1 on/off state"))
+
+        self.checkbox_do_2.SetLabelText(_("Digital output 2"))
+        self.checkbox_do_2.SetToolTip(_("Controls default Digital Output 2 on/off state"))
+
+        self.box_mouse.SetLabelText(_("Mouse"))
+
+        self.checkbox_circular_deadzone.SetLabelText(_("Enable Circular Dead Zone"))
+        self.checkbox_circular_deadzone.SetToolTip(_("Select Circular or Square Dead Zone for Joystick"))
+
+        self.label_mouse_response.SetLabelText(_("Mouse Response Curve: "))
+        self.label_mouse_response.SetToolTip(_("Selects how the joystick position is converted to mouse movement"))
+
+        self.box_BT.SetLabelText(_("Bluetooth:"))
+
+        self.label_device.SetLabelText(_("Device:"))
+        self.choice_BT_device_mode.SetToolTip(_("Device mode.  Controls what kind of device QuadStick is for Bluetooth function"))
+
+        self.label_auth.SetLabelText(_("Auth:"))
+        self.choice_BT_auth_mode.SetToolTip(_("Authentication mode.  Default: 4"))
+
+        self.checkbox_enable_serial_port.SetLabelText(_("Enable file management over serial port"))
+        self.checkbox_enable_serial_port.SetToolTip(_("Allows external pointer and file commands over Bluetooth or serial port when QuadStick is not plugged in to the PC"))
+
+        self.box_SP_misc.SetLabelText(_("Sip/Puff misc"))
+
+        self.checkbox_select_files.SetLabelText(_("Enable select file with side tube"))
+        self.checkbox_select_files.SetToolTip(_("Enables Select File for Long Sip on Right side tube "))
+
+        self.checkbox_swap.SetLabelText(_("Enable swap inputs with side tube"))
+        self.checkbox_swap.SetToolTip(_("Enables Swap Lip input with Long Puff on Right side tube"))
+
+        self.label_SP_low_delay.SetLabelText(_("Low threshold delay:"))
+        self.spin_ctrl_SP_low_delay.SetToolTip(_("Low (or Soft) Sip/Puff signals are sensed after a short delay"))
+
+        self.label_SP_high_delay.SetLabelText(_("High threshold delay:"))
+        self.spin_ctrl_SP_high_delay.SetToolTip(_("Long high threshold Sip/Puffs can "))
+
+        self.box_usb_settings.SetLabelText(_("USB settings"))
+
+        self.checkbox_ps4_boot_mode.SetLabelText(_("Enable boot in PS4 USB mode"))
+        self.checkbox_ps4_boot_mode.SetToolTip(_("Controls the USB emulation when the QuadStick powers up.  Required if using the PS4 console or if using Touchpad or motion controls with the virtual DS4 emulation"))
+
+        self.checkbox_Titan2.SetLabelText(_("Titan Two PS4 flag"))
+        self.checkbox_Titan2.SetToolTip(_("Disables Playstation authentication responses.  The Titan 2 passes PS4 authentication requests and responses must be disabled to avoid interruptions."))
+
+        self.checkbox_enable_usb_comm.SetLabelText(_("Enable Voice Commands over USB"))
+        self.checkbox_enable_usb_comm.SetToolTip(_("Allows voice commands over USB instead of Bluetooth or Serial cable"))
+
+        self.checkbox_usb_A_host_mode.SetLabelText(_("Enable USB-A Host mode"))
+        self.checkbox_usb_A_host_mode.SetToolTip(_("Must be on to support DS4, UltraStik, or other devices connected to the USB-A port."))
+
+        self.box_vg.SetLabelText(_("Virtual gamepad emulator"))
+
+        self.checkbox_enable_vg_X360.SetLabelText(_("Enable virtual XBox controller emulation"))
+        self.checkbox_enable_vg_X360.SetToolTip(_("Enables the ViGEmBus XBox virtual controller.  Allows playing PC games that use the XBox controller, or XBox Remote Play"))
+
+        self.checkbox_enable_vg_DS4.SetLabelText(_("Enable virtual Dualshock 4 emulation"))
+        self.checkbox_enable_vg_DS4.SetToolTip(_("Enables the ViGEmBus DS4 virtual controller.  Allows playing PC games that use the DS4 controller, or Playstation Remote Play"))
+
+        self.checkbox__enable_HIDHide.SetLabelText(_("Enable HIDHide to hide Quadstick from games"))
+        self.checkbox__enable_HIDHide.SetToolTip(_("When using an XBox or DS4 virtual controller, this setting prevents games and other programs from detecting the presence of the Quadstick's controller interface if they detect activity from older Direct Input controllers."))
+
+        self.box_qmp_settings.SetLabelText(_("QMP settings"))
+
+        self.label_locale.SetLabelText(_("Language:"))
+        self.choice_locale.SetToolTip(_("Change the Language of the QMP Program."))
+        self.choice_locale.SetString(0, _("English"))
+        self.choice_locale.SetString(1, _("German"))
+
+        self.checkbox_minimize_to_tray.SetLabelText(_("Minimize to tray"))
+        self.checkbox_minimize_to_tray.SetToolTip(_("QMP will minimze to the task bar tray when checked"))
+
+        self.checkbox_start_minimized.SetLabelText(_("Start QMP minimized"))
+        self.checkbox_start_minimized.SetToolTip(_("Start QMP minimized."))
+
+        self.box_current_firmware.SetLabelText(_("Current Firmware"))
+        self.label_new_version.SetLabelText(_("\nEach time a new version of the QuadStick \nfirmware is built, a build number is \nassigned to identify that version"))
+        self.box_build_number.SetLabelText(_("Build number:"))
+        self.label_firmware_update.SetLabelText(_("\n\nDuring the update process, this program \nwill attempt to backup and restore the \ngame CSV files on the QuadStick."))
+
+        self.box_available_firmware.SetLabelText(_("Available firmware"))
+        self.download_selected_build.SetLabelText(_("Download selected Firmware\nto QuadStick"))
+
+        self.voice_cmd_transcript_box.SetLabelText(_("Voice Command Transcript"))
+        self.word_list.SetToolTip(_("Currently active voice commands"))
+
+        self.box_voice_files.SetLabelText(_("In Vocola folder"))
+        self.button_edit_voice_file.SetLabelText(_("Edit Voice File"))
+
+        self.button_delete_voice_file.SetLabelText(_("Delete game file from folder"))
+        self.button_delete_voice_file.SetToolTip(_("Removes a game's VCH file from Vocola folder and adjusts VCL scripts to match"))
+
+        self.box_voice_cmd_files.SetLabelText(_("Vocola - Voice Command Language Files"))
+        
+        self.button_download_voice_file.SetLabelText(_("Download to Vocola folder"))
+        self.button_download_voice_file.SetToolTip(_("Download game VCH file from Quadstick.com and included it in voice commands"))
+
+        self.box_external_pointers_settings.SetLabelText(_("Settings:"))
+
+        self.box_external_pointers_dead_zone.SetLabelText(_("External Pointer Center Dead Zone:"))
+        self.TIR_DeadZone.SetToolTip(_("Size of no signal area in center for UltraStik or TrackIR"))
+        
+        self.box_mouse_capture_settings.SetLabelText(_("Mouse Capture Settings:"))
+        self.capture_mode.SetToolTip(_("Absolute position is for Project IRIS FPS Interactor.  Motion is for regular mouse or trackball."))
+
+        self.box_mouse_capture_center_x.SetLabelText(_("Center X:"))
+        self.center_x.SetToolTip(_("Set center X to aiming point of Project IRIS FPS Interactor"))
+
+        self.box_mouse_capture_center_y.SetLabelText(_("Center Y:"))
+        self.center_y.SetToolTip(_("Set center Y to aiming point of Project IRIS FPS Interactor"))
+
+        self.box_mouse_capture_width.SetLabelText(_("Width:"))
+        self.position_width.SetToolTip(_("Set to width of Project IRIS FPS Interactor"))
+
+        self.box_mouse_capture_height.SetLabelText(_("Height:"))
+        self.position_height.SetToolTip(_("Set to height of Project IRIS FPS Interactor"))
+
+        self.box_mouse_capture_gain_x.SetLabelText(_("Gain X:"))
+        self.gain_x.SetToolTip(_("Controls sensitiviy X of mouse. Default is 100%."))
+
+        self.box_mouse_capture_gain_y.SetLabelText(_("Gain Y:"))
+        self.gain_y.SetToolTip(_("Controls sensitiviy Y of mouse. Default is 100%."))
+
+        self.StartMouseCapture.SetLabelText(_("Capture Mouse Location\nPress F10 to turn on and off"))
+        self.StartMouseCapture.SetToolTip(_("Opens a full screen window to capture mouse and relays info to the QuadStick"))
+
+        self.button_save.SetLabelText(_("Save\nPreferences\nto\nQuadStick"))
+        self.button_cancel.SetLabelText(_("Close"))
+        self.button_reload.SetLabelText(_("Reload\nPreferences\nfrom\nQuadStick"))
+
+        self.notebook_joystick.Layout()
+        self.notebook_misc.Layout()
+        self.notebook_firmware.Layout()
+
+        self.Update()
+        self.Refresh()
+
+    def ChangeLocale(self, locale):
+        current_locale = self.GetLocale(self.choice_locale.GetStringSelection())
+        settings['current_locale'] = current_locale
+        locale = gettext.translation('locale', resource_path('./locales'), [current_locale])
+        locale.install()
+        _ = locale.gettext
+        self.text_ctrl_messages.AppendText("Set language to: " + current_locale + "\n")
+        self.UpdatePageAndLabelNames()
+
+    def GetLocale(self, localename):
+        if localename == _("English"):
+            return "en"
+        elif localename == _("German"):
+            return "de"
+
+    def GetLocaleName(self, locale):
+        if locale == "en":
+            return _("English")
+        elif locale == "de":
+            return _("German")
 
     def TextPaneKillFocusEvent(self, event):
         print('pane lost focus')
@@ -2486,10 +2801,10 @@ class QuadStickPreferences(wx.Frame):
                 del settings['WINDOW_POSITION']
             except:
                 pass
-                
+
         settings['minimize_to_tray'] = self.checkbox_minimize_to_tray.GetValue()
         settings['start_mimimized'] = self.checkbox_start_minimized.GetValue()
-        
+
         save_repr_file(settings)
         try:
             #if TIR:
@@ -3077,18 +3392,29 @@ def main():
     except Exception as e:
         print("qmp_filename exception: ", repr(e))
     # load_preferences_file()
-    
-    gettext.install("app") # part of wxPython internationalization. replace with the appropriate catalog name for different languages
+    read_repr_file() # load global settings
+
+    # initialize default locale if not exists in settings
+    if not settings.get('current_locale'):
+        settings['current_locale'] = "en"
+
+    # Set up Locale
+    current_locale = settings.get('current_locale')
+    locale = gettext.translation('locale', resource_path('./locales'), [current_locale])
+    locale.install()
+    _ = locale.gettext
+
     app = wx.App(0)
     wx.InitAllImageHandlers()
     QMP = QuadStickPreferences(None, wx.ID_ANY, "")
     QMP.console_type = ""
     app.SetTopWindow(QMP)
+
     # try:
         # generate_includes_vch_file()
     # except Exception as e:
-            # print repr(e) 
-    read_repr_file() # load global settings
+        # print repr(e) 
+    
     # create the Microterm singleton used for voice and other commands
     QMP.microterm = None
     # set up HIDEHide
@@ -3203,12 +3529,12 @@ def main():
             wx.CallAfter(QMP.ScanGoogleGameProfilesEvent, None)  # since games list is tab 0, needed this to pre-load games
             wx.CallAfter(QMP.start_microterm)
             wx.CallAfter(QMP.on_USB_status_timer)  # start monitoring the Quadstick HID status
+
             if settings.get('start_mimimized', False):  # minimize at start
                 wx.CallAfter(QMP.Iconize, True )
-        
-            
+
             app.MainLoop()  # 
-        
+
         except Exception as e:
             print("unable to open listening socket for vocola")
             print(repr(e))

@@ -1,0 +1,9 @@
+How to add a locale:
+
+- Create under locales a new folder (shortname of language) with the subfolder LC_MESSAGES
+- Copy the locale.pot file in the subfolder and rename it to locale.po
+- Open the locale.po file with the Poedit program.
+- Now you can translate the texts
+- When you done with translating texts you can click on File > Save
+- If the .mo file is not created in the locale subfolder after save you need to click on File > Create MO-File
+- Add locale to GetLocale() and GetLocaleName() methode in the QuadStick.py File
