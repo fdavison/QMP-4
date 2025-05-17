@@ -1,0 +1,6 @@
+wxPython
+pyinstall
+pyserial
+pywinusb
+openpyxl
+pyrfc6266
