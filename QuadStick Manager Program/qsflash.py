@@ -228,7 +228,7 @@ def save_csv_file(name, text):
         os.fsync(csvfile.fileno())
     return True
 
-def list_quadstick_csv_files(mainWindow):  # quadstick flash drive
+def list_quadstick_csv_files(mainWindow, fast=False):  # quadstick flash drive
     mainWindow._csv_files = []
     d = find_quadstick_drive()
     if d is None:
@@ -255,23 +255,24 @@ def list_quadstick_csv_files(mainWindow):  # quadstick flash drive
     for name in file_list:
         spreadsheet_name = ""
         id = ""
-        try:
-            pathname = d + name
-            print(repr(pathname))
-            with open(pathname.encode()) as csvfile:
-                firstline = csvfile.readline()
-            parts = firstline.split(",")
-            print(repr(parts))
-            if parts[0] == "QuadStick Configuration":
-                if parts[1] == "Version 1.4":
-                    id = (parts[2].split("spreadsheets/d/")[1]).split("/")[0]
-                    spreadsheet_name = parts[3]
-                elif parts[1] == "Version 1.5":
-                    id = parts[2]
-                    spreadsheet_name = parts[3]
-        except Exception as e:
-            print("exception while reading details from csv files")
-            print(repr(e))
+        if not fast:
+            try:
+                pathname = d + name
+                print(repr(pathname))
+                with open(pathname.encode()) as csvfile:
+                    firstline = csvfile.readline()
+                parts = firstline.split(",")
+                print(repr(parts))
+                if parts[0] == "QuadStick Configuration":
+                    if parts[1] == "Version 1.4":
+                        id = (parts[2].split("spreadsheets/d/")[1]).split("/")[0]
+                        spreadsheet_name = parts[3]
+                    elif parts[1] == "Version 1.5":
+                        id = parts[2]
+                        spreadsheet_name = parts[3]
+            except Exception as e:
+                print("exception while reading details from csv files")
+                print(repr(e))
         t = (name, id, spreadsheet_name)
         answer.append(t)
         print("CSV file: ", repr(t))
@@ -294,15 +295,20 @@ def quadstick_drive_serial_number(mainWindow):
                 if build:
                     return int(build.strip())
         return None
-    drive = os.open('\\\\.\\' + d[:2], os.O_RDONLY | os.O_BINARY)
-    tmp = os.read(drive, 512) # read boot sector 
-    #print (repr(tmp))
-    #print tmp
-    build = tmp[40] * 256 + tmp[39] #drive.read(2) # serial number
-    sn = tmp[41] * 256 + tmp[42]
-    #drive.close()
-    print(repr(build), repr(sn))
-    answer = build #ord(build[0]) + 256 * ord(build[1])
-    if answer == 30867: #old firmware
-        answer = 601
-    return answer
+    try:
+        drive = os.open('\\\\.\\' + d[:2], os.O_RDONLY | os.O_BINARY)
+        tmp = os.read(drive, 512) # read boot sector 
+        #print (repr(tmp))
+        #print tmp
+        build = tmp[40] * 256 + tmp[39] #drive.read(2) # serial number
+        sn = tmp[41] * 256 + tmp[42]
+        #drive.close()
+        print(repr(build), repr(sn))
+        answer = build #ord(build[0]) + 256 * ord(build[1])
+        if answer == 30867: #old firmware
+            answer = 601
+        return answer
+    except:
+        print('Unable to read drive SN')
+        return None
+
