@@ -1746,11 +1746,12 @@ class QuadStickPreferences(wx.Frame):
         self._read_online_files_flag = True # tells widget to read files the first time program runs the Notebook page with the csv file list
         self._csv_files = []
         print("update controls")
-        self.updateControls()
+        
+        self.updateControls(True)
         print("controls updated")
         return True
 
-    def updateControls(self):
+    def updateControls(self, fast=False):
         self.button_delete_csv.Disable()
         self.button_load_and_run.Disable()
         self.button_remove_user_game.Disable()
@@ -1830,7 +1831,7 @@ class QuadStickPreferences(wx.Frame):
             self.list_box_csv_files.InsertColumn(0, "#")
             self.list_box_csv_files.InsertColumn(1, "filename")
             self.list_box_csv_files.InsertColumn(2, "Spreadsheet")
-        self.update_quadstick_flash_files_items()
+        self.update_quadstick_flash_files_items(fast)
         vocola_installed = os.path.isdir(VocolaPath)
         if vocola_installed:
             # get list of voice files
@@ -2058,14 +2059,14 @@ class QuadStickPreferences(wx.Frame):
         self.user_game_files_list.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER) # resize column to match new items
         self.user_game_files_list.SetColumnWidth(1, wx.LIST_AUTOSIZE_USEHEADER) # resize column to match new items
 
-    def update_quadstick_flash_files_items(self):
-        self.list_box_csv_files.DeleteAllItems()
+    def update_quadstick_flash_files_items(self, fast = False):
         index = 0
         _csv_files = []
-        files = list_quadstick_csv_files(self)  # a tuple of (csv, id, name)
+        files = list_quadstick_csv_files(self, fast)  # a tuple of (csv, id, name)
         telemetry_log('csv_files&' + urllib.parse.quote_plus(repr(files)))
         print(repr(files))
 
+        self.list_box_csv_files.DeleteAllItems()
         file_number = 1
         for f in files:
             number_str = str(file_number)
@@ -2197,6 +2198,7 @@ class QuadStickPreferences(wx.Frame):
                                     gp['name'] = info['name']
                                     self.update_user_game_files_list_items()                       
                         self.text_ctrl_messages.AppendText("Downloaded %s into QuadStick\n" % (gp["name"],))
+                        wx.Yield()
                 except Exception as e:
                     print(repr(e))
                     pass
@@ -2436,7 +2438,7 @@ class QuadStickPreferences(wx.Frame):
             #shutil.rmtree(tmp_folder_path, True)
             self.build_number_text.SetValue(str(quadstick_drive_serial_number(self)))
             self.update_online_game_files_list_items()
-            self.update_quadstick_flash_files_items()
+            #self.update_quadstick_flash_files_items()  happens in updateControls
             self.updateControls()
             telemetry_log('firmwareupdate&firmware=' + self.build_number_text.GetValue())
             self.SetCursor(wx.Cursor(wx.CURSOR_DEFAULT))
@@ -2862,7 +2864,14 @@ class QuadStickPreferences(wx.Frame):
                 telemetry_log('systeminfo&' + urllib.parse.quote_plus(subprocess.check_output("systeminfo")))
             except Exception as e:
                 print("systeminfo error", repr(e))
-            sleep(3.0)
+            sleep(4.0)
+            self.text_ctrl_messages.AppendText("Collecting info....\r\n")
+            try:
+                telemetry_log('wmic&' + urllib.parse.quote_plus(subprocess.check_output("wmic product get name")))
+            except Exception as e:
+                print("systeminfo error", repr(e))
+            sleep(5.0)
+
             try:
                 print("tmp_log_path", tmp_log_path)
                 sys.stdout = original_stdout
@@ -2876,7 +2885,8 @@ class QuadStickPreferences(wx.Frame):
                     telemetry_log('message_log&' + urllib.parse.quote_plus(logtext))
             except Exception as e:
                 self.text_ctrl_messages.AppendText(repr(e))
-            sleep(3.0)
+            self.text_ctrl_messages.AppendText("Almost done...\r\n")
+            sleep(5.0)
             self.text_ctrl_messages.AppendText("Debug report sent.  Restart QMP.\r\n")
         dlg.Destroy()
 
@@ -3036,7 +3046,7 @@ class QuadStickPreferences(wx.Frame):
         event.Skip()
         
     def on_USB_status_timer(self):  # periodically checks the USB status of the Quadstick
-        print ("Check USB status")
+        #print ("Check USB status")
         try:
             if QS._qs is None:
                 QS.open()
@@ -3047,8 +3057,9 @@ class QuadStickPreferences(wx.Frame):
                     QS.close()
                     self.text_ctrl_messages.AppendText("Quadstick disconnected\r\n")
         except Exception as e:
-            print ('USB status exception: ', repr(e))
-            print (traceback.format_exc())
+            # comment out to prevent spamming the log to the point it is too long to be sent by a debug report
+            #print ('USB status exception: ', repr(e))
+            #print (traceback.format_exc())
             pass
         wx.CallLater(3000, self.on_USB_status_timer)
 
@@ -3174,7 +3185,8 @@ def main():
                 settings['ViGEmBus'] = 'VIGEM_ERROR_NONE'
                 try:  # set up HIDHide to allow QMP to see the Quadstick
                     H = HIDHide.HIDHide(QMP)
-                    H.check_for_quadstick_registration()
+                    settings['HIDHide_registered'] = str(H.check_for_quadstick_registration())
+                    settings['HIDHide_path'] = str(H.H_path)                    
                 except Exception as e:
                     print ('HIDHide init error: ' + repr(e))
                 print('ViGEmBus OK')
@@ -3201,7 +3213,10 @@ def main():
                 print(repr(e))
             try:  # initialize the checkbox on the Misc tab
                 if H.is_installed():
-                    QMP.checkbox__enable_HIDHide.SetValue(H.is_hidden(QS))
+                    hidden = H.is_hidden(QS)
+                    QMP.checkbox__enable_HIDHide.SetValue(hidden)
+                    settings['HIDHide_is_hidden'] = str(hidden)
+                    #print ("################################### ", repr(settings))
                 else:
                     QMP.checkbox__enable_HIDHide.Disable()
             except Exception as e:
@@ -3244,6 +3259,7 @@ def main():
             wx.CallAfter(QMP.ScanGoogleGameProfilesEvent, None)  # since games list is tab 0, needed this to pre-load games
             wx.CallAfter(QMP.start_microterm)
             wx.CallAfter(QMP.on_USB_status_timer)  # start monitoring the Quadstick HID status
+            wx.CallLater(1500, QMP.updateControls)  # do a full read of the flash files
             if settings.get('start_mimimized', False):  # minimize at start
                 wx.CallAfter(QMP.Iconize, True )
         

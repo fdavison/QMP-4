@@ -28,11 +28,11 @@ folder_row_div_tag = '<div class="folder-row">'
 factory_games_ids_list = "http://bvhbml89uymwxubx.quadstick.com" 
 
 version_url = "http://qmp2version.quadstick.com"
-#telemetery_url =  "https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec"
+telemetry_url =  "https://script.google.com/a/macros/quadstick.com/s/AKfycbwdzab1ps7bvGlXKHnQKkDKqGJf_i5MmaN7sXhqrcj75Wt5dlE/exec"
 
-#telemetery_url = "https://telemetry.quadstick.com"
+#telemetry_url = "http://telemetry.quadstick.net/"
 
-VERSION = '4.03'
+VERSION = '4.05'
 
 IDHASH = str(uuid.getnode())
 print(VERSION, IDHASH)
@@ -146,8 +146,8 @@ def telemetry_log(log_string):
 
 def _telemetry_log(log_string):
     try:
-        #print "_telemetry_log: ", log_string
-        f = urllib.request.urlopen("https://telemetry.quadstick.com/exec?qmp=" + IDHASH + "&log=" + repr(log_string), None, 10.0) # append log entry
+        #print ("_telemetry_log: " + log_string)
+        f = urllib.request.urlopen(telemetry_url, bytes("qmp=" + IDHASH + "&log=" + repr(log_string), 'utf-8'), 10.0) # append log entry
         version = f.read()
         #print "telemetry log result: ", version
     except Exception as e:
