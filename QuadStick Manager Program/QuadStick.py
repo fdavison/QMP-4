@@ -571,7 +571,7 @@ class QuadStickPreferences(wx.Frame):
         # begin wxGlade: QuadStickPreferences.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((1200, 700))
+        self.SetSize((953, 700))
         self.SetTitle(_("QuadStick"))
         self.SetToolTip(_("Change preference settings for QuadStick"))
 
@@ -636,25 +636,39 @@ class QuadStickPreferences(wx.Frame):
         self.button_download_csv.SetToolTip(_("Download a game's custom CSV file into the QuadStick"))
         sizer_49.Add(self.button_download_csv, 1, wx.EXPAND, 0)
 
-        sizer_8 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom profiles")), wx.VERTICAL)
-        sizer_22.Add(sizer_8, 2, wx.EXPAND, 0)
+        self.sizer_8 = wx.StaticBoxSizer(wx.StaticBox(self.notebook_game_files, wx.ID_ANY, _("User Custom profiles")), wx.VERTICAL)
+        sizer_22.Add(self.sizer_8, 2, wx.EXPAND, 0)
 
         self.user_game_files_list = wx.ListCtrl(self.notebook_game_files, wx.ID_ANY, style=wx.BORDER_SUNKEN | wx.LC_REPORT)
         self.user_game_files_list.SetToolTip(_("Double Click to Edit.  Drag over to download into to QuadStick flash."))
-        sizer_8.Add(self.user_game_files_list, 4, wx.EXPAND, 0)
+        self.sizer_8.Add(self.user_game_files_list, 4, wx.EXPAND, 0)
+
+        sizer_10 = wx.BoxSizer(wx.HORIZONTAL)
+        self.sizer_8.Add(sizer_10, 1, wx.EXPAND, 0)
 
         sizer_48 = wx.BoxSizer(wx.VERTICAL)
-        sizer_8.Add(sizer_48, 1, wx.EXPAND, 0)
+        sizer_10.Add(sizer_48, 1, wx.EXPAND, 0)
 
-        self.button_add_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Add Game to User List"))
+        self.button_add_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Add Game\nto User List"))
+        self.button_add_user_game.SetMinSize((149, 45))
         self.button_add_user_game.SetToolTip(_("Click button and paste URL for a custom configuration spreadsheet into the dialog box"))
         sizer_48.Add(self.button_add_user_game, 1, wx.EXPAND, 0)
 
-        self.button_remove_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Remove Game from User List"))
+        self.button_remove_user_game = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Remove Game\nfrom User List"))
+        self.button_remove_user_game.SetMinSize((149, 45))
         self.button_remove_user_game.SetToolTip(_("Removes the selected User Custom game from the list."))
         sizer_48.Add(self.button_remove_user_game, 1, wx.EXPAND, 0)
 
-        sizer_48.Add((0, 0), 0, 0, 0)
+        sizer_9 = wx.BoxSizer(wx.VERTICAL)
+        sizer_10.Add(sizer_9, 1, wx.EXPAND, 0)
+
+        self.button_game_list_to_clipboard = wx.Button(self.notebook_game_files, wx.ID_ANY, _("Copy Game List\nto Clipboard"))
+        self.button_game_list_to_clipboard.SetMinSize((149, 45))
+        self.button_game_list_to_clipboard.SetToolTip(_("Copy Game List to Clipboard"))
+        sizer_9.Add(self.button_game_list_to_clipboard, 1, wx.EXPAND, 0)
+
+        self.panel_3 = wx.Panel(self.notebook_game_files, wx.ID_ANY)
+        sizer_9.Add(self.panel_3, 1, wx.EXPAND, 0)
 
         self.notebook_joystick = wx.Panel(self.notebook, wx.ID_ANY)
         self.notebook.AddPage(self.notebook_joystick, _("Joystick"))
@@ -1301,6 +1315,7 @@ class QuadStickPreferences(wx.Frame):
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.GameListSelected, self.user_game_files_list)
         self.Bind(wx.EVT_BUTTON, self.UserGamesAdd, self.button_add_user_game)
         self.Bind(wx.EVT_BUTTON, self.UserGamesRemove, self.button_remove_user_game)
+        self.Bind(wx.EVT_BUTTON, self.CopyGameListToClipboard, self.button_game_list_to_clipboard)
         self.Bind(wx.EVT_COMMAND_SCROLL, self.slider_UP_event, self.slider_UP)
         self.Bind(wx.EVT_COMMAND_SCROLL, self.slider_LEFT_event, self.slider_LEFT)
         self.Bind(wx.EVT_COMMAND_SCROLL, self.slider_NEUTRAL_event, self.slider_NEUTRAL)
@@ -1979,6 +1994,8 @@ class QuadStickPreferences(wx.Frame):
             index += 1
         self.online_game_files_list.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER) # resize column to match new items
         self.online_game_files_list.SetColumnWidth(1, wx.LIST_AUTOSIZE_USEHEADER) # resize column to match new items
+        static_box = self.sizer_8.GetStaticBox() # Keep a count of the number of game profiles in the static box label
+        static_box.SetLabel(f"User Custom profiles ({len(self._game_profiles)})")
 
     def update_online_voice_files_list_items(self): # updates the display widget with the current voice list
         self.online_voice_files_list.DeleteAllItems()
@@ -2617,6 +2634,7 @@ class QuadStickPreferences(wx.Frame):
         sock = socket.socket(socket.AF_INET, # Internet
                              socket.SOCK_DGRAM) # UDP
         sock.sendto(aString.encode(), (UDP_IP, UDP_PORT))
+        self._deselect_list(self.list_box_csv_files) # Prevent accidentally spamming "Load and Run" if your enter key is the same as the enter key of the destination sheet
         event.Skip()
 
     def OnEditSpreadsheet(self, event):  # wxGlade: QuadStickPreferences.<event_handler>
@@ -3045,6 +3063,29 @@ class QuadStickPreferences(wx.Frame):
             pass
         wx.CallLater(3000, self.on_USB_status_timer)
 
+    def get_max_game_name_length(self, my_games):  # In order to create fixed width output for games and URLs
+        max_game_name_length = 0
+        for my_game in my_games:
+            if len(my_game) > max_game_name_length:
+                max_game_name_length = len(my_game) # Get the maximum field length needed
+        return max_game_name_length
+
+    def CopyGameListToClipboard(self, event):  # wxGlade: QuadStickPreferences.<event_handler>
+        print("Event handler 'CopyGameListToClipboard'")
+        user_game_profiles = settings.get("user_game_profiles", [])
+        self.game_dict = {game['name']: game['id'] for game in user_game_profiles}  # Assuming each game is a dictionary
+        self.max_game_name_length = self.get_max_game_name_length(self.game_dict.keys()) + 5  # Add spacing for the output
+        clipboard_data = ""
+        for my_game in self.game_dict.keys():
+            clipboard_data += f"{my_game.ljust(self.max_game_name_length, ' ')} https://docs.google.com/spreadsheets/d/{self.game_dict[my_game]}\n"
+        # Copy the data to the clipboard
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(wx.TextDataObject(clipboard_data))
+            wx.TheClipboard.Close()
+            self.text_ctrl_messages.AppendText("Game list copied to clipboard.\n")
+        else:
+            self.text_ctrl_messages.AppendText("Failed to open clipboard.\n")
+        event.Skip()
 # end of class QuadStickPreferences
 
 
